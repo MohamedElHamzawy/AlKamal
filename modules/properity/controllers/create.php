@@ -23,11 +23,11 @@ function createProperty($body)
     if (isset($body['area'])) {
         $properityData['area'] = $body['area'];
     }
-    if (isset($body['from'])) {
-        $contractData['from'] = $body['from'];
+    if (isset($body['contract_from'])) {
+        $contractData['contract_from'] = $body['contract_from'];
     }
-    if (isset($body['to'])) {
-        $contractData['to'] = $body['to'];
+    if (isset($body['contract_to'])) {
+        $contractData['contract_to'] = $body['contract_to'];
     }
     if (isset($body['rent'])) {
         $contractData['rent'] = $body['rent'];

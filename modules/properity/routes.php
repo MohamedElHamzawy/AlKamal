@@ -29,10 +29,10 @@ function properity_rest_api_init()
             'area' => array(
                 'type' => 'string',
             ),
-            'from' => array(
+            'contract_from' => array(
                 'type' => 'string',
             ),
-            'to' => array(
+            'contract_to' => array(
                 'type' => 'string',
             ),
             'rent' => array(
@@ -106,10 +106,10 @@ function properity_rest_api_init()
             'area' => array(
                 'type' => 'string',
             ),
-            'from' => array(
+            'contract_from' => array(
                 'type' => 'string',
             ),
-            'to' => array(
+            'contract_to' => array(
                 'type' => 'string',
             ),
             'rent' => array(
