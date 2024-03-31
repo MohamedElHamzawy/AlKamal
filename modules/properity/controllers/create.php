@@ -3,13 +3,13 @@ function createProperty($body)
 {
     global $wpdb;
     $properityData = array();
-    $properityTable = $wpdb->prefix . 'property';
+    $properityTable = $wpdb->prefix . 'alkamal_property';
     $contractData = array();
-    $contractTable = $wpdb->prefix . 'contract';
+    $contractTable = $wpdb->prefix . 'alkamal_contract';
     $electricData = array();
-    $electricTable = $wpdb->prefix . 'electric';
+    $electricTable = $wpdb->prefix . 'alkamal_electric';
     $internetData = array();
-    $internetTable = $wpdb->prefix . 'internet';
+    $internetTable = $wpdb->prefix . 'alkamal_internet';
 
     if (isset($body['title'])) {
         $properityData['title'] = $body['title'];
