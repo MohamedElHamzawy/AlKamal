@@ -4,10 +4,13 @@ Plugin Name: REST API Launch
 Description: Launch REST API
 */
 require 'modules/user/user.php';
+require 'modules/properity/properity.php';
 require 'vendor/autoload.php';
+require 'includes/activate.php';
 
 use Firebase\JWT\JWT;
 
+register_activation_hook(__FILE__, 'rest_api_launch_activation');
 class REST_API_Launch
 {
     function __construct()
