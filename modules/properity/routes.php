@@ -3,17 +3,17 @@ require 'controllers/create.php';
 function properity_rest_api_init()
 {
     $namespace = 'alkamal/v0';
-    // register_rest_route("$namespace", '/properity', array(
+    // register_rest_route("$namespace", '/property', array(
     //     'methods' => 'GET',
     //     'callback' => 'getAllProperties',
     // ));
 
-    // register_rest_route("$namespace", '/properity/(?P<id>\d+)', array(
+    // register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
     //     'methods' => 'GET',
     //     'callback' => 'getProperty',
     // ));
 
-    register_rest_route("$namespace", '/properity', array(
+    register_rest_route("$namespace", '/property', array(
         'methods' => 'POST',
         'callback' => 'createProperty',
         'args' => array(
@@ -72,12 +72,12 @@ function properity_rest_api_init()
 
     ));
 
-    // register_rest_route("$namespace", '/properity/(?P<id>\d+)', array(
+    // register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
     //     'methods' => 'DELETE',
     //     'callback' => 'deleteProperty',
     // ));
 
-    // register_rest_route("$namespace", '/properity/(?P<id>\d+)', array(
+    // register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
     //     'methods' => 'PUT',
     //     'callback' => 'updateProperty',
     //     'args' => array(
