@@ -17,7 +17,7 @@ function properity_rest_api_init()
         'methods' => 'POST',
         'callback' => 'createProperty',
         'args' => array(
-            'title' => array(
+            'propertyName' => array(
                 'type' => 'string',
             ),
             'address' => array(
@@ -36,7 +36,7 @@ function properity_rest_api_init()
                 'type' => 'string',
             ),
             'images' => array(
-                'type' => 'string',
+                'type' => 'array',
             ),
             'rentValue' => array(
                 'type' => 'number',
@@ -66,7 +66,7 @@ function properity_rest_api_init()
                 'type' => 'array',
             ),
             'internet' => array(
-                'type' => 'array',
+                'type' => 'array || object || string',
             )
         )
 
