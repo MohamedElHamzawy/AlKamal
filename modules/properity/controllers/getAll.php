@@ -105,6 +105,7 @@ function getAllProperties()
                 $imageUrl = wp_get_attachment_url($bondImageId);
                 array_push($images, $imageUrl);
             }
+            $electric->bond = $images;
             array_push($electricities, $electric);
         }
 
