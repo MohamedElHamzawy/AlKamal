@@ -62,7 +62,6 @@ function getAllProperties()
         $property->status = $porp->status;
         $property->startAt = $porp->startAt;
         $property->endAt = $porp->endAt;
-        $property->images = $porp->images;
         $property->rentValue = $porp->rentValue;
         $property->depositValue = $porp->depositValue;
         $property->meterPrice = $porp->meterPrice;
@@ -71,6 +70,12 @@ function getAllProperties()
         $property->insurance = $porp->insurance;
         $property->commission = $porp->commission;
         $property->annualIncrease = $porp->annualIncrease;
+        $images = array();
+        foreach (explode(',', $porp->images) as $imageId) {
+            $imageUrl = wp_get_attachment_url($imageId);
+            array_push($images, $imageUrl);
+        }
+        $property->images = $images;
 
         $getElectricities = $wpdb->get_results(
             "SELECT * FROM {$wpdb->prefix}alkamal_electricity WHERE propertyId = {$porp->id}"
@@ -83,9 +88,23 @@ function getAllProperties()
             $electric->sourceOfElectricity = $electricity->sourceOfElectricity;
             $electric->electricCounterNumber = $electricity->electricCounterNumber;
             $electric->accountNumber = $electricity->accountNumber;
-            $electric->bill = $electricity->bill;
-            $electric->receipt = $electricity->receipt;
-            $electric->bond = $electricity->bond;
+            $images = array();
+            foreach (explode(',', $electricity->bill) as $billImageId) {
+                $imageUrl = wp_get_attachment_url($billImageId);
+                array_push($images, $imageUrl);
+            }
+            $electric->bill = $images;
+            $images = array();
+            foreach (explode(',', $electricity->receipt) as $receiptImageId) {
+                $imageUrl = wp_get_attachment_url($receiptImageId);
+                array_push($images, $imageUrl);
+            }
+            $electric->receipt = $images;
+            $images = array();
+            foreach (explode(',', $electricity->bond) as $bondImageId) {
+                $imageUrl = wp_get_attachment_url($bondImageId);
+                array_push($images, $imageUrl);
+            }
             array_push($electricities, $electric);
         }
 
@@ -93,17 +112,32 @@ function getAllProperties()
             "SELECT * FROM {$wpdb->prefix}alkamal_internet WHERE propertyId = {$porp->id}"
         );
         $internets = array();
-        foreach ($getInternets as $internet) {
+        foreach ($getInternets as $net) {
             $internet = new Internet();
-            $internet->id = $internet->id;
-            $internet->propertyId = $internet->propertyId;
-            $internet->internetCompany = $internet->internetCompany;
-            $internet->startAt = $internet->startAt;
-            $internet->endAt = $internet->endAt;
-            $internet->transactionNumber = $internet->transactionNumber;
-            $internet->bill = $internet->bill;
-            $internet->receipt = $internet->receipt;
-            $internet->bond = $internet->bond;
+            $internet->id = $net->id;
+            $internet->propertyId = $net->propertyId;
+            $internet->internetCompany = $net->internetCompany;
+            $internet->startAt = $net->startAt;
+            $internet->endAt = $net->endAt;
+            $internet->transactionNumber = $net->transactionNumber;
+            $images = array();
+            foreach (explode(',', $net->bill) as $billImageId) {
+                $imageUrl = wp_get_attachment_url($billImageId);
+                array_push($images, $imageUrl);
+            }
+            $internet->bill = $images;
+            $images = array();
+            foreach (explode(',', $net->receipt) as $receiptImageId) {
+                $imageUrl = wp_get_attachment_url($receiptImageId);
+                array_push($images, $imageUrl);
+            }
+            $internet->receipt = $images;
+            $images = array();
+            foreach (explode(',', $net->bond) as $bondImageId) {
+                $imageUrl = wp_get_attachment_url($bondImageId);
+                array_push($images, $imageUrl);
+            }
+            $internet->bond = $images;
             array_push($internets, $internet);
         }
 
