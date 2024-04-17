@@ -17,8 +17,8 @@ class Property
     public $insurance;
     public $commission;
     public $annualIncrease;
-    public $electricities;
-    public $internets;
+    public $electricity;
+    public $internet;
 }
 
 class Electricity
@@ -49,9 +49,9 @@ function getAllProperties()
 {
     global $wpdb;
 
-    $getProperties = $wpdb->get_results(
-        "SELECT * FROM {$wpdb->prefix}alkamal_property"
-    );
+    $getProperties = $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM " . $wpdb->prefix . "alkamal_property"
+    ));
     $properties = array();
     foreach ($getProperties as $porp) {
         $property = new Property();
@@ -112,38 +112,35 @@ function getAllProperties()
         $getInternets = $wpdb->get_results(
             "SELECT * FROM {$wpdb->prefix}alkamal_internet WHERE propertyId = {$porp->id}"
         );
-        $internets = array();
-        foreach ($getInternets as $net) {
-            $internet = new Internet();
-            $internet->id = $net->id;
-            $internet->propertyId = $net->propertyId;
-            $internet->internetCompany = $net->internetCompany;
-            $internet->startAt = $net->startAt;
-            $internet->endAt = $net->endAt;
-            $internet->transactionNumber = $net->transactionNumber;
-            $images = array();
-            foreach (explode(',', $net->bill) as $billImageId) {
-                $imageUrl = wp_get_attachment_url($billImageId);
-                array_push($images, $imageUrl);
-            }
-            $internet->bill = $images;
-            $images = array();
-            foreach (explode(',', $net->receipt) as $receiptImageId) {
-                $imageUrl = wp_get_attachment_url($receiptImageId);
-                array_push($images, $imageUrl);
-            }
-            $internet->receipt = $images;
-            $images = array();
-            foreach (explode(',', $net->bond) as $bondImageId) {
-                $imageUrl = wp_get_attachment_url($bondImageId);
-                array_push($images, $imageUrl);
-            }
-            $internet->bond = $images;
-            array_push($internets, $internet);
+        $net = $getInternets[0];
+        $internet = new Internet();
+        $internet->id = $net->id;
+        $internet->propertyId = $net->propertyId;
+        $internet->internetCompany = $net->internetCompany;
+        $internet->startAt = $net->startAt;
+        $internet->endAt = $net->endAt;
+        $internet->transactionNumber = $net->transactionNumber;
+        $images = array();
+        foreach (explode(',', $net->bill) as $billImageId) {
+            $imageUrl = wp_get_attachment_url($billImageId);
+            array_push($images, $imageUrl);
         }
+        $internet->bill = $images;
+        $images = array();
+        foreach (explode(',', $net->receipt) as $receiptImageId) {
+            $imageUrl = wp_get_attachment_url($receiptImageId);
+            array_push($images, $imageUrl);
+        }
+        $internet->receipt = $images;
+        $images = array();
+        foreach (explode(',', $net->bond) as $bondImageId) {
+            $imageUrl = wp_get_attachment_url($bondImageId);
+            array_push($images, $imageUrl);
+        }
+        $internet->bond = $images;
 
-        $property->electricities = $electricities;
-        $property->internets = $internets;
+        $property->electricity = $electricities;
+        $property->internet = $internet;
         array_push($properties, $property);
     }
     return $properties;
