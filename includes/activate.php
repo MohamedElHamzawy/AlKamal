@@ -41,6 +41,7 @@ function rest_api_launch_activation()
         startAt DATETIME,
         endAt DATETIME,
         transactionNumber TEXT,
+        accountNumber TEXT,
         bill LONGTEXT,
         receipt LONGTEXT,
         bond LONGTEXT

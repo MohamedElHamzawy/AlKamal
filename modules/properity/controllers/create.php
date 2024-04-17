@@ -133,7 +133,7 @@ function createProperty($body)
             $internetData = array();
             $internet = $body['internet'];
             $internetData['propertyId'] = $propertyId;
-            foreach (array('internetCompany', 'startAt', 'endAt', 'transactionNumber', 'bill', 'receipt', 'bond') as $key) {
+            foreach (array('internetCompany', 'startAt', 'endAt', 'transactionNumber', 'accountNumber', 'bill', 'receipt', 'bond') as $key) {
                 if (isset($internet[$key]) && !empty($internet[$key])) {
                     if (in_array($key, array('bill', 'receipt', 'bond'))) {
                         $reqImages = $internet[$key];

@@ -41,6 +41,7 @@ class Internet
     public $startAt;
     public $endAt;
     public $transactionNumber;
+    public $accountNumber;
     public $bill;
     public $receipt;
     public $bond;
@@ -117,6 +118,7 @@ function getAllProperties()
         $internet->id = $net->id;
         $internet->propertyId = $net->propertyId;
         $internet->internetCompany = $net->internetCompany;
+        $internet->accountNumber = $net->accountNumber;
         $internet->startAt = $net->startAt;
         $internet->endAt = $net->endAt;
         $internet->transactionNumber = $net->transactionNumber;
