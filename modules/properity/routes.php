@@ -1,6 +1,7 @@
 <?php
 require 'controllers/create.php';
 require 'controllers/getAll.php';
+require 'controllers/update.php';
 function properity_rest_api_init()
 {
     $namespace = 'alkamal/v0';
@@ -8,11 +9,6 @@ function properity_rest_api_init()
         'methods' => 'GET',
         'callback' => 'getAllProperties',
     ));
-
-    // register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
-    //     'methods' => 'GET',
-    //     'callback' => 'getProperty',
-    // ));
 
     register_rest_route("$namespace", '/property', array(
         'methods' => 'POST',
@@ -73,84 +69,116 @@ function properity_rest_api_init()
 
     ));
 
+    register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
+        'methods' => 'PUT',
+        'callback' => 'updateProperty',
+        'args' => array(
+            'propertyName' => array(
+                'type' => 'string || array || integer',
+            ),
+            'address' => array(
+                'type' => 'string || array || integer',
+            ),
+            'area' => array(
+                'type' => 'string || array || integer',
+            ),
+            'status' => array(
+                'type' => 'string || array || integer',
+            ),
+            'startAt' => array(
+                'type' => 'string || array || integer',
+            ),
+            'endAt' => array(
+                'type' => 'string || array || integer',
+            ),
+            'images' => array(
+                'type' => 'string || array || integer',
+            ),
+            'rentValue' => array(
+                'type' => 'string || array || integer',
+            ),
+            'depositValue' => array(
+                'type' => 'string || array || integer',
+            ),
+            'meterPrice' => array(
+                'type' => 'string || array || integer',
+            ),
+            'paperContractNumber' => array(
+                'type' => 'string || array || integer',
+            ),
+            'digitlyContractNumber' => array(
+                'type' => 'string || array || integer',
+            ),
+            'insurance' => array(
+                'type' => 'string || array || integer',
+            ),
+            'commission' => array(
+                'type' => 'string || array || integer',
+            ),
+            'annualIncrease' => array(
+                'type' => 'string || array || integer',
+            ),
+        )
+    ));
+
+    register_rest_route("$namespace", '/internet/(?P<id>\d+)', array(
+        'methods' => 'PUT',
+        'callback' => 'updateInternet',
+        'args' => array(
+            'internetCompany' => array(
+                'type' => 'string || array || integer',
+            ),
+            'startAt' => array(
+                'type' => 'string || array || integer',
+            ),
+            'endAt' => array(
+                'type' => 'string || array || integer',
+            ),
+            'transactionNumber' => array(
+                'type' => 'string || array || integer',
+            ),
+            'accountNumber' => array(
+                'type' => 'string || array || integer',
+            ),
+            'bill' => array(
+                'type' => 'array',
+            ),
+            'receipt' => array(
+                'type' => 'array',
+            ),
+            'bond' => array(
+                'type' => 'array',
+            ),
+        ),
+    ));
+
+    register_rest_route("$namespace", '/electricity/(?P<id>\d+)', array(
+        'methods' => 'PUT',
+        'callback' => 'updateElectricity',
+        'args' => array(
+            'sourceOfElectricity' => array(
+                'type' => 'string || array || integer',
+            ),
+            'electricCounterNumber' => array(
+                'type' => 'string || array || integer',
+            ),
+            'accountNumber' => array(
+                'type' => 'string || array || integer',
+            ),
+            'bill' => array(
+                'type' => 'array',
+            ),
+            'receipt' => array(
+                'type' => 'array',
+            ),
+            'bond' => array(
+                'type' => 'array',
+            ),
+        ),
+    ));
+
     // register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
     //     'methods' => 'DELETE',
     //     'callback' => 'deleteProperty',
-    // ));
-
-    // register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
-    //     'methods' => 'PUT',
-    //     'callback' => 'updateProperty',
-    //     'args' => array(
-    //         'title' => array(
-    //             'type' => 'string || integer || float',
-    //             'required' => true
-    //         ),
-    //         'address' => array(
-    //             'type' => 'string || integer || float',
-    //             'required' => true
-    //         ),
-    //         'image' => array(
-    //             'type' => 'string || integer || float'
-    //         ),
-    //         'area' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'contract_from' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'contract_to' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'rent' => array(
-    //             'type' => 'string || integer || float',
-    //             'required' => true
-    //         ),
-    //         'deposit' => array(
-    //             'type' => 'string || integer || float',
-    //             'required' => true
-    //         ),
-    //         'paperContract' => array(
-    //             'type' => 'string || integer || float',
-    //             'required' => true
-    //         ),
-    //         'eContract' => array(
-    //             'type' => 'string || integer || float',
-    //             'required' => true
-    //         ),
-    //         'insurance' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'commission' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'incrementalRatio' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'electricSource' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'electricMeter' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'meterNumber' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         'electricReceipt' => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         "internetCompany" => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         "internetNumber" => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         "internetFrom" => array(
-    //             'type' => 'string || integer || float',
-    //         ),
-    //         "internetTo" => array(
-    //             'type' => 'string || integer || float',
-    //         )
-    //     )
     // ));
 }
