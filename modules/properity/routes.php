@@ -2,6 +2,7 @@
 require 'controllers/create.php';
 require 'controllers/getAll.php';
 require 'controllers/update.php';
+require 'controllers/delete.php';
 function properity_rest_api_init()
 {
     $namespace = 'alkamal/v0';
@@ -177,8 +178,8 @@ function properity_rest_api_init()
         ),
     ));
 
-    // register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
-    //     'methods' => 'DELETE',
-    //     'callback' => 'deleteProperty',
-    // ));
+    register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
+        'methods' => 'DELETE',
+        'callback' => 'deleteProperty',
+    ));
 }
