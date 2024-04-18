@@ -6,11 +6,11 @@ require 'controllers/delete.php';
 function properity_rest_api_init()
 {
     $namespace = 'alkamal/v0';
+
     register_rest_route("$namespace", '/property', array(
         'methods' => 'GET',
         'callback' => 'getAllProperties',
     ));
-
     register_rest_route("$namespace", '/property', array(
         'methods' => 'POST',
         'callback' => 'createProperty',
