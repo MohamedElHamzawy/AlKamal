@@ -30,12 +30,10 @@ function userLogin($body)
         'user' => $user
     );
     $token = JWT::encode($payload, 'OCTAGATOR_ALKAMAL_SECRET', 'HS256');
-
-    // Save token in database
     global $wpdb;
-    $tokensTable = $wpdb->prefix . 'user_tokens';
+    $tokensTable = $wpdb->prefix . 'user';
     $wpdb->insert($tokensTable, array(
-        'user_id' => $user->id,
+        'id' => $user->id,
         'token' => $token
     ));
 
