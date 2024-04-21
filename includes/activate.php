@@ -20,7 +20,9 @@ function rest_api_launch_activation()
         digitlyContractNumber TEXT,
         insurance FLOAT,
         commission FLOAT,
-        annualIncrease FLOAT
+        annualIncrease FLOAT,
+        paymentStatus VARCHAR(25) NOT NULL DEFAULT 'unpaid',
+        landlordId KEY (landlordId) REFERENCES " . $wpdb->prefix . "alkamal_landlord(id) ON DELETE CASCADE
     )");
     dbDelta("CREATE TABLE " . $wpdb->prefix . "alkamal_electricity (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -46,4 +48,18 @@ function rest_api_launch_activation()
         receipt LONGTEXT,
         bond LONGTEXT
     )");
+
+    dbDelta("CREATE TABLE " . $wpdb->prefix . "alkamal_landlord (
+        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        name TEXT,
+        email TEXT,
+        image TEXT,
+        phone TEXT,
+        )");
+    dbDelta("CREATE TABLE " . $wpdb->prefix . "alkamal_user (
+        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        name TEXT,
+        password TEXT,
+        token TEXT,
+        )");
 }

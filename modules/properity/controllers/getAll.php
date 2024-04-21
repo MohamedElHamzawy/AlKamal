@@ -19,6 +19,8 @@ class Property
     public $annualIncrease;
     public $electricity;
     public $internet;
+    public $landlord;
+    public $paymentStatus;
 }
 
 class Electricity
@@ -71,6 +73,9 @@ function getAllProperties()
         $property->insurance = $porp->insurance;
         $property->commission = $porp->commission;
         $property->annualIncrease = $porp->annualIncrease;
+        $property->paymentStatus = $porp->paymentStatus;
+        $ll = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}alkamal_landlord WHERE id = {$porp->landlordId}");
+        $property->landlord = $ll;
         $images = array();
         foreach (explode(',', $porp->images) as $imageId) {
             $imageUrl = wp_get_attachment_url($imageId);

@@ -97,7 +97,7 @@ function updateElectricity($body)
     }
 
     $electricityData = array();
-    foreach (array('propertyId', 'sourceOfElectricity', 'electricCounterNumber', 'accountNumber', 'bill', 'receipt', 'bond') as $key) {
+    foreach (array('propertyId', 'sourceOfElectricity', 'electricCounterNumber', 'accountNumber', 'bill', 'receipt', 'bond' , 'paymentStatus' , 'landlordId') as $key) {
         if (isset($body[$key]) && !empty($body[$key])) {
             if (in_array($key, array('bill', 'receipt', 'bond'))) {
                 $reqImages = $body[$key];

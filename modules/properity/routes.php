@@ -119,8 +119,13 @@ function properity_rest_api_init()
             'annualIncrease' => array(
                 'type' => 'string || array || integer',
             ),
-        )
-    ));
+            'paymentstatus' => array(
+                'type' => 'string || array || integer',
+            ),
+            'landlord' => array(
+                'type' => 'string || array || integer',
+            ),
+    )));
 
     register_rest_route("$namespace", '/internet/(?P<id>\d+)', array(
         'methods' => 'PUT',
