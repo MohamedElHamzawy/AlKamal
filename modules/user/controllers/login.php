@@ -11,7 +11,7 @@ function userLogin($body)
     if (isset($username) && $username != '' && isset($password) && $password != '' ) {
         
     global $wpdb;
-    $usersTable = $wpdb->prefix . 'users';
+    $usersTable = $wpdb->prefix . 'alkamal_user';
     $user = $wpdb->get_row("SELECT * FROM $usersTable WHERE name = '$username'");
 
         if (!$user){

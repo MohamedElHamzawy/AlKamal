@@ -147,13 +147,13 @@ function properity_rest_api_init()
                 'type' => 'string || array || integer',
             ),
             'bill' => array(
-                'type' => 'array',
+                'type' => 'string || array || integer',
             ),
             'receipt' => array(
-                'type' => 'array',
+                'type' => 'string || array || integer',
             ),
             'bond' => array(
-                'type' => 'array',
+                'type' => 'string || array || integer',
             ),
         ),
     ));
@@ -172,13 +172,13 @@ function properity_rest_api_init()
                 'type' => 'string || array || integer',
             ),
             'bill' => array(
-                'type' => 'array',
+                'type' => 'string || array || integer',
             ),
             'receipt' => array(
-                'type' => 'array',
+                'type' => 'string || array || integer',
             ),
             'bond' => array(
-                'type' => 'array',
+                'type' => 'string || array || integer',
             ),
         ),
     ));

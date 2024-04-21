@@ -3,7 +3,7 @@
 function create($body){
 
     global $wpdb;
-    $usersTable = $wpdb->prefix . 'users';
+    $usersTable = $wpdb->prefix . 'alkamal_user';
     $data = [
         'name' => $body['name'],
         'password' => $body['password']

@@ -102,14 +102,12 @@ function updateElectricity($body)
             if (in_array($key, array('bill', 'receipt', 'bond'))) {
                 $reqImages = $body[$key];
                 $imgArr = array();
-                foreach (array('bill', 'receipt', 'bond') as $imageType) {
-                    if (isset($electricity->{$imageType}) && !empty($electricity->{$imageType})) {
-                        $oldImages = explode(',', $electricity->{$imageType});
+                    if (isset($electricity->{$key}) && !empty($electricity->{$key})) {
+                        $oldImages = explode(',', $electricity->{$key});
                         foreach ($oldImages as $oldImage) {
                             wp_delete_attachment($oldImage, false);
                         }
                     }
-                }
                 $i = 0;
                 foreach ($reqImages as $img) {
                     $i++;
@@ -186,14 +184,12 @@ function updateInternet($body)
             if (in_array($key, array('bill', 'receipt', 'bond'))) {
                 $reqImages = $body[$key];
                 $imgArr = array();
-                foreach (array('bill', 'receipt', 'bond') as $imageType) {
-                    if (isset($internet->{$imageType}) && !empty($internet->{$imageType})) {
-                        $oldImages = explode(',', $internet->{$imageType});
+                    if (isset($internet->{$key}) && !empty($internet->{$key})) {
+                        $oldImages = explode(',', $internet->{$key});
                         foreach ($oldImages as $oldImage) {
                             wp_delete_attachment($oldImage, false);
                         }
                     }
-                }
                 $i = 0;
                 foreach ($reqImages as $img) {
                     $i++;

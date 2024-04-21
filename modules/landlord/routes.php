@@ -7,14 +7,11 @@ require 'controllers/delete.php';
 require 'controllers/get.php';
 
 
-add_action('rest_api_init', "landlord_rest_api_init");
-
 function landlord_rest_api_init(){
     $namespace = 'alkamal/v0';
 
 
     register_rest_route($namespace, '/landlord', array(
-
         'methods' => 'GET',
         'callback' => 'getAllLandlords',
 
