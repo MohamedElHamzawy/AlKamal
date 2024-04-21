@@ -36,6 +36,10 @@ function updateLandlord($body){
         }
 
         $wpdb->update($landlordTable, $lord , array('id' => $body['id']));
+        if (isset($body['propertyId']) && !empty($body['propertyId'])) {
+            $propertyTable = $wpdb->prefix . 'alkamal_property';
+            $wpdb->update($propertyTable, array('landlordId' => $body['id']) , array('id' => $body['propertyId']));
+        }
 
         return array(
             'message' => 'Landlord has been updated successfully'

@@ -54,7 +54,7 @@ function rest_api_launch_activation()
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
         name TEXT,
         email TEXT,
-        image TEXT,
+        image LONGTEXT,
         phone TEXT
         )");
     dbDelta("CREATE TABLE " . $wpdb->prefix . "alkamal_user (
