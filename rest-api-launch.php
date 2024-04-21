@@ -5,6 +5,7 @@ Description: Launch REST API
 */
 require 'modules/user/user.php';
 require 'modules/properity/properity.php';
+require 'modules/landlord/landlord.php';
 require 'vendor/autoload.php';
 require 'includes/activate.php';
 

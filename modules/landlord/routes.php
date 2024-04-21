@@ -4,7 +4,6 @@ require 'controllers/create.php';
 require 'controllers/getAll.php';
 require 'controllers/update.php';
 require 'controllers/delete.php';
-require 'controllers/get.php';
 
 
 function landlord_rest_api_init(){
@@ -16,7 +15,6 @@ function landlord_rest_api_init(){
         'callback' => 'getAllLandlords',
 
     ));
-
     register_rest_route($namespace, '/landlord', array(
         'methods' => 'POST',
         'callback' => 'createLandlord',
@@ -36,8 +34,12 @@ function landlord_rest_api_init(){
             'image' => array(
                 'type' => 'string',
                 'required' => true
-            )),
-    ));
+            ),
+            'propertyId' => array(
+                'type' => 'string',
+                'required' => true
+            ),
+            )));
 
     register_rest_route($namespace, '/landlord(?P<id>\d+)', array(
         'methods' => 'PUT',
