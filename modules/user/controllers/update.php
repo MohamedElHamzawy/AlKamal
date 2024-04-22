@@ -20,7 +20,12 @@ function userUpdate($body)
                 $data['password'] = $body['newpassword'];
             }
             else {
-                return array('message' => 'password and confirm password not match', 'status' => '401');}
+                return array(
+                    'message' => 'password and confirm password not match',
+                     'password' => $body['newpassword'],
+                     'confirmPassword' => $body['confirmPassword'],
+                      'status' => '401'
+                    );}
         }
         if (isset($body['name']) && !empty($body['name'])) {
             $data['name'] = $body['name'];
@@ -29,7 +34,7 @@ function userUpdate($body)
         $wpdb->update($usersTable, $data, array('id' => $user->id));
         return new WP_REST_Response([
             'message' => 'user has been updated successfully',
-            'user' => $data
+            'user' => $body
         ], 200);
     }
 }
