@@ -12,7 +12,7 @@ function userLogin($body)
         
     global $wpdb;
     $usersTable = $wpdb->prefix . 'alkamal_user';
-    $user = $wpdb->get_row("SELECT * FROM $usersTable WHERE name = '$username'");
+    $user = $wpdb->get_row("SELECT * FROM $usersTable WHERE username = '$username'");
 
         if (!$user){
             wp_send_json_error("username is not signed", 401);
@@ -39,7 +39,9 @@ function userLogin($body)
     return array(
         'message' => 'user has been logged in successfully',
         'userID' => $user->id,
-        'token' => $token
+        'token' => $token,
+        'name' => $user->name,
+        'usernaem' => $user->username
     );
 }
 
