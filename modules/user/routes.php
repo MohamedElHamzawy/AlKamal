@@ -75,11 +75,11 @@ function user_rest_api_init()
                 'type' => 'string',
                 'required' => false
             ),
-            'newpassword' => array(
+            'newPassword' => array(
                 'type' => 'string',
                 'required' => false
             ),
-            'oldpassword' => array(
+            'oldPassword' => array(
                 'type' => 'string',
                 'required' => false
             ),

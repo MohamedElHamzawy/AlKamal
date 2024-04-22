@@ -41,7 +41,7 @@ function userLogin($body)
         'userID' => $user->id,
         'token' => $token,
         'name' => $user->name,
-        'usernaem' => $user->username
+        'username' => $user->username
     );
 }
 

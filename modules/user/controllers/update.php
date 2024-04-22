@@ -12,12 +12,12 @@ function userUpdate($body)
         if (isset($body['username']) && !empty($body['username'])) {
             $data["username"] = $body['username'];
         }
-        if (isset($body['oldpassword']) && !empty($body['oldpassword'])) {
-            if ($body['oldpassword'] != $user->password) {
+        if (isset($body['oldPassword']) && !empty($body['oldPassword'])) {
+            if ($body['oldPassword'] != $user->password) {
                 return array('message' => 'password not match', 'status' => '401');
             }
-            if (isset($body['confirmPassword']) && !empty($body['confirmPassword']) && isset($body['newpassword']) && !empty($body['newpassword']) &&  $body['newpassword'] == $body['confirmPassword']) {
-                $data['password'] = $body['newpassword'];
+            if (isset($body['confirmPassword']) && !empty($body['confirmPassword']) && isset($body['newPassword']) && !empty($body['newPassword']) &&  $body['newPassword'] == $body['confirmPassword']) {
+                $data['password'] = $body['newPassword'];
             }
             else {
                 return array(
