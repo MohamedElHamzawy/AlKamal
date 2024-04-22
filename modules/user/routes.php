@@ -79,7 +79,7 @@ function user_rest_api_init()
                 'type' => 'string',
                 'required' => false
             ),
-            'confirm_password' => array(
+            'confirmPassword' => array(
                 'type' => 'string',
                 'required' => false
             ),
