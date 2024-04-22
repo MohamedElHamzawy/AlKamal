@@ -74,9 +74,11 @@ function getAllProperties()
         $property->commission = $porp->commission;
         $property->annualIncrease = $porp->annualIncrease;
         $property->paymentStatus = $porp->paymentStatus;
+        if($porp->landlordId){
         $ll = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}alkamal_landlord WHERE id = {$porp->landlordId}");
         $ll->image = wp_get_attachment_url($ll->image);
         $property->landlord = $ll;
+        }
         $images = array();
         foreach (explode(',', $porp->images) as $imageId) {
             $imageUrl = wp_get_attachment_url($imageId);
