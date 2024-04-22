@@ -4,28 +4,29 @@ function userUpdate($body)
 {
 
     global $wpdb;
-
+    $data = array();
     $usersTable = $wpdb->prefix . 'alkamal_user';
 
     $user = $wpdb->get_row("SELECT * FROM $usersTable WHERE id = " . $body['id']);
     if ($user) {
         if (isset($body['username']) && !empty($body['username'])) {
-            $user->name = $body['username'];
+            $data["username"] = $body['username'];
         }
         if (isset($body['oldpassword']) && !empty($body['oldpassword'])) {
             if ($body['oldpassword'] != $user->password) {
                 return array('message' => 'password not match', 'status' => '401');
             }
             if (isset($body['confirmPassword']) && !empty($body['confirmPassword']) && $body['newpassword'] == $body['confirmPassword']) {
-                $user->password = $body['newpassword'];
+                $data['password'] = $body['newpassword'];
             }
             else {
                 return array('message' => 'password and confirm password not match', 'status' => '401');}
         }
         if (isset($body['name']) && !empty($body['name'])) {
-            $user->name = $body['name'];
+            $data['name'] = $body['name'];
         }
-        $wpdb->update($usersTable, $user, array('id' => $user->id));
+        
+        $wpdb->update($usersTable, $data, array('id' => $user->id));
         return new WP_REST_Response([
             'message' => 'user has been updated successfully',
             'user' => $user
