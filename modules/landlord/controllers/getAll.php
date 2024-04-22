@@ -1,6 +1,6 @@
 <?php
 
-class landlord{
+class landlordData{
     public $name;
     public $email;
     public $phone;
@@ -8,12 +8,12 @@ class landlord{
     public $propertyId;
     public $propety;
 }
-class property{
+class propertyData{
     public $id;
     public $name;
 }
 function getAllLandlords(){
-    $ll = new landlord();
+    $ll = new landlordData();
     global $wpdb;
     $landlordTable = $wpdb->prefix . 'alkamal_landlord';
     $propertyTable = $wpdb->prefix . 'alkamal_property';
@@ -21,7 +21,7 @@ function getAllLandlords(){
         "SELECT * FROM $landlordTable"
     ));
     $landlords = [];
-    $prop = new property();
+    $prop = new propertyData();
     foreach ($getLandlords as $key) {
         $ll->name = $key->name;
         $ll->email = $key->email;
