@@ -6,7 +6,7 @@ class landlordData{
     public $email;
     public $phone;
     public $image;
-    public $propety;
+    public $propety = array();    
 }
 class propertyData{
     public $id;
@@ -36,9 +36,11 @@ function getAllLandlords(){
                 $prop->name = '';
                 array_push($ll->propety, $prop);
             }else{
-                $prop->id = $properties->id;
-                $prop->name = $properties->propertyName;
-                array_push($ll->propety, $prop);
+                for($i = 0; $i < count($properties); $i++){
+                    $prop->id = $properties[$i]->id;
+                    $prop->name = $properties[$i]->propertyName;
+                    array_push($ll->propety, $prop);
+                }
             }
         array_push($landlords, $ll);
     }
