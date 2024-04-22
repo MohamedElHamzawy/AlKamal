@@ -16,7 +16,7 @@ function userUpdate($body)
             if ($body['oldpassword'] != $user->password) {
                 return array('message' => 'password not match', 'status' => '401');
             }
-            if (isset($body['confirmPassword']) && !empty($body['confirmPassword']) && $body['newpassword'] == $body['confirmPassword']) {
+            if (isset($body['confirmPassword']) && !empty($body['confirmPassword']) && isset($body['newpassword']) && !empty($body['newpassword']) &&  $body['newpassword'] == $body['confirmPassword']) {
                 $data['password'] = $body['newpassword'];
             }
             else {
@@ -29,7 +29,7 @@ function userUpdate($body)
         $wpdb->update($usersTable, $data, array('id' => $user->id));
         return new WP_REST_Response([
             'message' => 'user has been updated successfully',
-            'user' => $user
+            'user' => $data
         ], 200);
     }
 }
