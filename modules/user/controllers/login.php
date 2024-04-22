@@ -30,11 +30,11 @@ function userLogin($body)
         'user' => $user
     );
     $token = JWT::encode($payload, 'OCTAGATOR_ALKAMAL_SECRET', 'HS256');
-    global $wpdb;
-    $tokensTable = $wpdb->prefix . 'alkamal_user';
-    $wpdb->update($tokensTable, array(
-        'token' => $token
-    ), array('id' => $user->id));
+    // global $wpdb;
+    // $tokensTable = $wpdb->prefix . 'alkamal_user';
+    // $wpdb->update($tokensTable, array(
+    //     'token' => $token
+    // ), array('id' => $user->id));
 
     return array(
         'message' => 'user has been logged in successfully',
