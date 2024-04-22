@@ -48,19 +48,22 @@ function landlord_rest_api_init(){
         'args' => array(
             'name' => array(
                 'type' => 'string',
-                'required' => true
+                'required' => false
             ),
             'email' => array(
                 'type' => 'string',
-                'required' => true
+                'required' => false
+
             ),
             'phone' => array(
                 'type' => 'string',
-                'required' => true
+                'required' => false
+
             ),
             'image' => array(
                 'type' => 'string',
-                'required' => true
+                'required' => false
+
             )),
     ));
 

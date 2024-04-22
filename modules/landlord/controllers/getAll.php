@@ -1,11 +1,11 @@
 <?php
 
 class landlordData{
+    public $id;
     public $name;
     public $email;
     public $phone;
     public $image;
-    public $propertyId;
     public $propety;
 }
 class propertyData{
@@ -13,7 +13,6 @@ class propertyData{
     public $name;
 }
 function getAllLandlords(){
-    $ll = new landlordData();
     global $wpdb;
     $landlordTable = $wpdb->prefix . 'alkamal_landlord';
     $propertyTable = $wpdb->prefix . 'alkamal_property';
@@ -21,23 +20,27 @@ function getAllLandlords(){
         "SELECT * FROM $landlordTable"
     ));
     $landlords = [];
-    $prop = new propertyData();
     foreach ($getLandlords as $key) {
+        $prop = new propertyData();
+        $ll = new landlordData();
+
+        $ll->id = $key->id;
         $ll->name = $key->name;
         $ll->email = $key->email;
         $ll->phone = $key->phone;
         $ll->image = wp_get_attachment_url($key->image);;
 
-        $properties = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $propertyTable WHERE landlord_id = %d",
-            $key->id
-        ));
-
-            $prop->id = $properties->id;
-            $prop->name = $properties->property_name;
-            array_push($ll->propety, $prop);
-
+        $properties = $wpdb->get_results("SELECT * FROM {$propertyTable} WHERE landlordId = {$key->id}");
+            if(!$properties){
+                $prop->id = '';
+                $prop->name = '';
+                array_push($ll->propety, $prop);
+            }else{
+                $prop->id = $properties->id;
+                $prop->name = $properties->propertyName;
+                array_push($ll->propety, $prop);
+            }
         array_push($landlords, $ll);
     }
-    return $getLandlords;
+    return $landlords;
 }
