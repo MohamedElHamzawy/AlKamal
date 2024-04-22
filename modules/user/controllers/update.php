@@ -1,23 +1,23 @@
 <?php
 
-function update($body)
+function userUpdate($body)
 {
 
     global $wpdb;
 
-    $usersTable = $wpdb->prefix . 'users';
+    $usersTable = $wpdb->prefix . 'alkamal_user';
 
     $user = $wpdb->get_row("SELECT * FROM $usersTable WHERE id = " . $body['id']);
     if ($user) {
         if (isset($body['username']) && !empty($body['username'])) {
             $user->name = $body['username'];
         }
-        if (isset($body['password']) && !empty($body['password'])) {
-            if ($body['password'] != $user->password) {
+        if (isset($body['oldpassword']) && !empty($body['oldpassword'])) {
+            if ($body['oldpassword'] != $user->password) {
                 return array('message' => 'password not match', 'status' => '401');
             }
-            if (isset($body['confirmPassword']) && !empty($body['confirmPassword']) && $body['password'] == $body['confirmPassword']) {
-                $user->password = $body['password'];
+            if (isset($body['confirmPassword']) && !empty($body['confirmPassword']) && $body['newpassword'] == $body['confirmPassword']) {
+                $user->password = $body['newpassword'];
             }
             else {
                 return array('message' => 'password and confirm password not match', 'status' => '401');}

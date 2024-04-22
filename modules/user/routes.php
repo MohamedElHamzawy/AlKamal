@@ -1,11 +1,11 @@
 <?php
 
-use function PHPSTORM_META\type;
-
 require 'controllers/login.php';
 require 'controllers/getUser.php';
 require 'controllers/token.php';
 require 'controllers/register.php';
+require 'controllers/getAll.php';
+require 'controllers/update.php';
 function user_rest_api_init()
 {
     register_rest_route("alkamal/v0", '/user/login', array(
@@ -75,14 +75,24 @@ function user_rest_api_init()
                 'type' => 'string',
                 'required' => false
             ),
-            'password' => array(
+            'newpassword' => array(
+                'type' => 'string',
+                'required' => false
+            ),
+            'oldpassword' => array(
                 'type' => 'string',
                 'required' => false
             ),
             'confirmPassword' => array(
                 'type' => 'string',
                 'required' => false
-            ),
+            )
         )
     ));
+    register_rest_route("alkamal/v0", '/users', array(
+        'methods' => 'GET',
+        'callback' => 'getAll',
+
+    ));
 }
+
