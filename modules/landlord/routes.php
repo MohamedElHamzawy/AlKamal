@@ -42,7 +42,7 @@ function landlord_rest_api_init(){
             ),
             )));
 
-    register_rest_route($namespace, '/landlord(?P<id>\d+)', array(
+    register_rest_route($namespace, '/landlord/(?P<id>\d+)', array(
         'methods' => 'PUT',
         'callback' => 'updateLandlord',
         'args' => array(
@@ -72,17 +72,17 @@ function landlord_rest_api_init(){
         'callback' => 'deleteLandlord',
     ));
 
-    register_rest_route($namespace, '/landlord', array(
-        'methods' => 'GET',
-        'callback' => 'getLandlord',
-        'args' => array(
-            'get_query_pram' => array(
-                'id' => array(
-                    'type' => 'string',
-                    'required' => true
-                )
-                ))
-    ));
+    // register_rest_route($namespace, '/landlord', array(
+    //     'methods' => 'GET',
+    //     'callback' => 'getLandlord',
+    //     'args' => array(
+    //         'get_query_pram' => array(
+    //             'id' => array(
+    //                 'type' => 'string',
+    //                 'required' => true
+    //             )
+    //             ))
+    // ));
 
 }
     
