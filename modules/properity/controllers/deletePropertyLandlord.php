@@ -10,6 +10,7 @@ function deletePropertyLandlord($data){
 
     $wpdb->update($propertyTable, $dataRequest, $whereRequest);
     return array(
-        'message' => "property's landlord has been updated successfully"
+        'status' => true
+
     );
 }

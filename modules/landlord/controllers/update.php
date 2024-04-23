@@ -15,12 +15,18 @@ function updateLandlord($body)
     } else {
         if (isset($body['name']) && !empty($body['name'])) {
             $lord["name"] = $body['name'];
+            $wpdb->update($landlordTable, $lord, array('id' => $body['id']));
+
         }
         if (isset($body['phone']) && !empty($body['phone'])) {
             $lord["phone"] = $body['phone'];
+            $wpdb->update($landlordTable, $lord, array('id' => $body['id']));
+
         }
         if (isset($body['email']) && !empty($body['email'])) {
             $lord["email"] = $body['email'];
+            $wpdb->update($landlordTable, $lord, array('id' => $body['id']));
+
         }
         if (isset($body['image']) && !empty($body['image'])) {
             

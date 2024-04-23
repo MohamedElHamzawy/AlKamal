@@ -8,9 +8,11 @@ require 'modules/properity/properity.php';
 require 'modules/landlord/landlord.php';
 require 'vendor/autoload.php';
 require 'includes/activate.php';
+require 'notification.php';
 
 use Firebase\JWT\JWT;
 
+add_action("ALKAMAL_NOTIFICATION", "sendunpaidnotfication");
 register_activation_hook(__FILE__, 'rest_api_launch_activation');
 class REST_API_Launch
 {
