@@ -3,13 +3,9 @@ function sendunpaidnotfication()
 {
     global $wpdb;
     $tableProperty = $wpdb->prefix . "alkamal_property";
-    $sql = "SELECT * FROM $tableProperty WHERE paymentStatus = 'unpaid'";
+    $sql = "SELECT propertyName FROM $tableProperty WHERE paymentStatus = 'unpaid'";
     $resultProperty = $wpdb->get_results($sql);
-    $notBody = 'UnPaid Properties' . "\n";
-
-    foreach ($resultProperty as $key) {
-        $notBody = $notBody . ". " . $key->propertyName . "\n";
-    }
+    $notBody = "You have " . count($resultProperty) . " unpaid properties. Tap to check them out.";
 
     $tableUser = $wpdb->prefix . "alkamal_user";
     $resultUser = $wpdb->get_results("SELECT * FROM $tableUser");
