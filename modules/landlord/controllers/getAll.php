@@ -27,7 +27,7 @@ function getAllLandlords(){
         $ll->name = $key->name;
         $ll->email = $key->email;
         $ll->phone = $key->phone;
-        $ll->image = wp_get_attachment_url($key->image);;
+        $ll->image = wp_get_attachment_url($key->image);
         $properties = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$propertyTable} WHERE landlordId = {$key->id}"));
             if(!$properties){
                 $prop->id = '';

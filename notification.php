@@ -5,10 +5,10 @@ function sendunpaidnotfication()
     $tableProperty = $wpdb->prefix . "alkamal_property";
     $sql = "SELECT * FROM $tableProperty WHERE paymentStatus = 'unpaid'";
     $resultProperty = $wpdb->get_results($sql);
-    $notBody = 'UnPaid Properties/n';
+    $notBody = 'UnPaid Properties' . "\n";
 
     foreach ($resultProperty as $key) {
-        $notBody = $notBody . ". " . $key->propertyName . ' ./n';
+        $notBody = $notBody . ". " . $key->propertyName . "\n";
     }
 
     $tableUser = $wpdb->prefix . "alkamal_user";

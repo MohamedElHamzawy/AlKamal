@@ -33,11 +33,11 @@ function updateLandlord($body)
             $reqImages = $body['image'];
             $oldImgId = $landlord->image;
             wp_delete_attachment($oldImgId);
-            $imgArr = array();
-            $i = 0;
-            foreach ($reqImages as $img) {
-                $i++;
-                $image_data = base64_decode($img);
+            // $imgArr = array();
+            // $i = 0;
+            // foreach ($reqImages as $img) {
+                // $i++;
+                $image_data = base64_decode($reqImages);
                 $image_name = $landlord->name . "-" . "1" . "." . "jpeg";
                 $temp_file = wp_tempnam($image_name);
                 if (file_put_contents($temp_file, $image_data) === FALSE) {
@@ -74,10 +74,10 @@ function updateLandlord($body)
                 }
                 wp_update_attachment_metadata($attachment_id, $attachment_data);
                 unlink($temp_file);
-                array_push($imgArr, $attachment_id);
-            }
-            $images = implode(',', $imgArr);
-            $lord["image"] = $images;
+                // array_push($imgArr, $attachment_id);
+            // }
+            // $images = implode(',', $imgArr);
+            $lord["image"] = $attachment_id;
             $wpdb->update($landlordTable, $lord, array('id' => $body['id']));
 
         }
