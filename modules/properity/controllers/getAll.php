@@ -20,7 +20,8 @@ class Property
     public $electricity;
     public $internet;
     public $landlord;
-    public $paymentStatus;
+    public $paymentSystem;
+    public $payments = array();
 }
 
 class Electricity
@@ -48,6 +49,13 @@ class Internet
     public $receipt;
     public $bond;
 }
+
+class Payment{
+    public $id;
+    public $propertyId;
+    public $amount;
+    public $date;
+}
 function getAllProperties()
 {
     global $wpdb;
@@ -73,7 +81,7 @@ function getAllProperties()
         $property->insurance = $porp->insurance;
         $property->commission = $porp->commission;
         $property->annualIncrease = $porp->annualIncrease;
-        $property->paymentStatus = $porp->paymentStatus;
+        $property->paymentSystem = $porp->paymentSystem;
         if ($porp->landlordId) {
             $ll = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}alkamal_landlord WHERE id = {$porp->landlordId}");
             if (wp_get_attachment_url($ll->image) != false) {
@@ -175,6 +183,17 @@ function getAllProperties()
         $property->electricity = $electricities;
         $property->internet = $internet;
         array_push($properties, $property);
+
+        $payments = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM " . $wpdb->prefix . "alkamal_payment"." WHERE propertyId = %d",
+            $property->id
+        ));
+
+        $property->payments = $payments;
     }
+
+
+
+
     return $properties;
 }

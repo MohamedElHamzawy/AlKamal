@@ -14,19 +14,19 @@ function updatePaymentStatus($body)
         return false;
     }
 
-    $table_notification = $wpdb->prefix . "alkamal_notification";
-    $table_property = $wpdb->prefix . "alkamal_property";
-    $query = $wpdb->get_var("SELECT anot.lastNotificationDate lastNotificationDate , aprop.paymentSystem paymentSystem
-    FROM $table_notification anot
-    INNER JOIN $table_property aprop ON anot.propertyId = aprop.id
-     WHERE propertyId = '$body[id]' ");
-    $notdate = strtotime("+{$query['paymentSystem']} days", strtotime($query['lastNotificationDate'])); 
-    $sqlDateFormat = date('Y-m-d', $notdate); // Format the timestamp as YYYY-MM-DD for SQL
-    $notificationData['nextNotificationDate'] = $sqlDateFormat;
-    $result = $wpdb->update($table_notification, $notificationData, array('propertyId' => $body['id']));
+    // $table_notification = $wpdb->prefix . "alkamal_notification";
+    // $table_property = $wpdb->prefix . "alkamal_property";
+    // $query = $wpdb->get_var("SELECT anot.lastNotificationDate lastNotificationDate , aprop.paymentSystem paymentSystem
+    // FROM $table_notification anot
+    // INNER JOIN $table_property aprop ON anot.propertyId = aprop.id
+    //  WHERE propertyId = '$body[id]' ");
+    // $notdate = strtotime("+{$query['paymentSystem']} days", strtotime($query['lastNotificationDate'])); 
+    // $sqlDateFormat = date('Y-m-d', $notdate); // Format the timestamp as YYYY-MM-DD for SQL
+    // $notificationData['nextNotificationDate'] = $sqlDateFormat;
+    // $result = $wpdb->update($table_notification, $notificationData, array('propertyId' => $body['id']));
 
 
     return array(
-        'message' => "Payment Status Updated to " . $body['paymentStatus'] . " successfully",
+        'message' => "Payment Status updated successfully",
     );
 }

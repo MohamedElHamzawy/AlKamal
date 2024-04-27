@@ -209,4 +209,20 @@ function properity_rest_api_init()
             )
         )
     ));
+    register_rest_route("$namespace", "/payments", array(
+        'methods' => 'GET',
+        'callback' => 'getPayments',
+        'args' => array(
+            'get_query_params' => array(
+                'page' => array(
+                    'type' => 'integer || string',
+                    'required' => false
+                ),
+                'perPage' => array(
+                    'type' => 'integer || string',
+                    'required' => false
+                )
+            )
+        )
+    ));
 }

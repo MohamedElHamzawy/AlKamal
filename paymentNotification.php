@@ -28,7 +28,7 @@ function sendunpaidnotfication()
                     "body" => $notBody,
                     "title" => $title,
                     "status" => 'done',
-                    'screen' => "PropertiesView"
+                    'apartment' => $notification->propertyId
                 ),
                 "notification" => array(
                     "android_channel_id" => "high_importance_channel",
