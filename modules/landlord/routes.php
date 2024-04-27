@@ -26,7 +26,7 @@ function landlord_rest_api_init(){
             ),
             'email' => array(
                 'type' => 'string',
-                'required' => true
+                'required' => false
             ),
             'phone' => array(
                 'type' => 'string',
@@ -34,7 +34,7 @@ function landlord_rest_api_init(){
             ),
             'image' => array(
                 'type' => 'string',
-                'required' => true
+                'required' => false,
             ),
             'propertyId' => array(
                 'type' => 'string',
@@ -60,6 +60,10 @@ function landlord_rest_api_init(){
                 'required' => false
 
             ),
+            'propertyId' => array(
+                'type' => 'string',
+                'required' => false
+            ),
             'image' => array(
                 'type' => 'string',
                 'required' => false
@@ -67,7 +71,7 @@ function landlord_rest_api_init(){
             )),
     ));
 
-    register_rest_route($namespace, '/landlord(?P<id>\d+)', array(
+    register_rest_route($namespace, '/landlord/(?P<id>\d+)', array(
         'methods' => 'DELETE',
         'callback' => 'deleteLandlord',
     ));

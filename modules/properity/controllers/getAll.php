@@ -74,17 +74,22 @@ function getAllProperties()
         $property->commission = $porp->commission;
         $property->annualIncrease = $porp->annualIncrease;
         $property->paymentStatus = $porp->paymentStatus;
-        if($porp->landlordId){
-        $ll = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}alkamal_landlord WHERE id = {$porp->landlordId}");
-        $ll->image = wp_get_attachment_url($ll->image);
-        $property->landlord = $ll;
+        if ($porp->landlordId) {
+            $ll = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}alkamal_landlord WHERE id = {$porp->landlordId}");
+            if (wp_get_attachment_url($ll->image) != false) {
+                $ll->image = wp_get_attachment_url($ll->image);
+            }
+            $property->landlord = $ll;
         }
         $images = array();
         foreach (explode(',', $porp->images) as $imageId) {
-            $imageUrl = wp_get_attachment_url($imageId);
-            array_push($images, $imageUrl);
+            if (wp_get_attachment_url($imageId) != false) {
+                $imageUrl = wp_get_attachment_url($imageId);
+                array_push($images, $imageUrl);
+            }
         }
         $property->images = $images;
+
 
         $getElectricities = $wpdb->get_results(
             "SELECT * FROM {$wpdb->prefix}alkamal_electricity WHERE propertyId = {$porp->id}"
@@ -99,27 +104,36 @@ function getAllProperties()
             $electric->accountNumber = $electricity->accountNumber;
             $images = array();
             foreach (explode(',', $electricity->bill) as $billImageId) {
-                $imageUrl = wp_get_attachment_url($billImageId);
-                array_push($images, $imageUrl);
+                if (wp_get_attachment_url($billImageId) != false) {
+
+                    $imageUrl = wp_get_attachment_url($billImageId);
+                    array_push($images, $imageUrl);
+                }
             }
             $electric->bill = $images;
             $images = array();
             foreach (explode(',', $electricity->receipt) as $receiptImageId) {
-                $imageUrl = wp_get_attachment_url($receiptImageId);
-                array_push($images, $imageUrl);
+                if (wp_get_attachment_url($receiptImageId) != false) {
+
+                    $imageUrl = wp_get_attachment_url($receiptImageId);
+                    array_push($images, $imageUrl);
+                }
             }
             $electric->receipt = $images;
             $images = array();
             foreach (explode(',', $electricity->bond) as $bondImageId) {
-                $imageUrl = wp_get_attachment_url($bondImageId);
-                array_push($images, $imageUrl);
+                if (wp_get_attachment_url($bondImageId) != false) {
+
+                    $imageUrl = wp_get_attachment_url($bondImageId);
+                    array_push($images, $imageUrl);
+                }
             }
             $electric->bond = $images;
             array_push($electricities, $electric);
         }
 
         $getInternets = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}alkamal_internet WHERE propertyId = {$porp->id}"
+            "SELECT * FROM {$wpdb->prefix}alkamal_internet WHERE propertyId = {$porp->id} AND isDeleted = 0"
         );
         $net = $getInternets[0];
         $internet = new Internet();
@@ -132,20 +146,29 @@ function getAllProperties()
         $internet->transactionNumber = $net->transactionNumber;
         $images = array();
         foreach (explode(',', $net->bill) as $billImageId) {
-            $imageUrl = wp_get_attachment_url($billImageId);
-            array_push($images, $imageUrl);
+            if (wp_get_attachment_url($billImageId) != false) {
+
+                $imageUrl = wp_get_attachment_url($billImageId);
+                array_push($images, $imageUrl);
+            }
         }
         $internet->bill = $images;
         $images = array();
         foreach (explode(',', $net->receipt) as $receiptImageId) {
-            $imageUrl = wp_get_attachment_url($receiptImageId);
-            array_push($images, $imageUrl);
+            if (wp_get_attachment_url($receiptImageId) != false) {
+
+                $imageUrl = wp_get_attachment_url($receiptImageId);
+                array_push($images, $imageUrl);
+            }
         }
         $internet->receipt = $images;
         $images = array();
         foreach (explode(',', $net->bond) as $bondImageId) {
-            $imageUrl = wp_get_attachment_url($bondImageId);
-            array_push($images, $imageUrl);
+            if (wp_get_attachment_url($bondImageId) != false) {
+
+                $imageUrl = wp_get_attachment_url($bondImageId);
+                array_push($images, $imageUrl);
+            }
         }
         $internet->bond = $images;
 

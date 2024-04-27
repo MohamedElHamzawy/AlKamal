@@ -17,7 +17,8 @@ function sendunpaidnotfication()
                 "click_action" => "FLUTTER_NOTIFICATION_CLICK",
                 "body" => $notBody,
                 "title" => "قوافل الكمال",
-                "status" => 'done'
+                "status" => 'done',
+                'screen' => "PropertiesView"
             ),
             "notification" => array(
                 "android_channel_id" => "high_importance_channel",
@@ -26,7 +27,8 @@ function sendunpaidnotfication()
                 "sound" => "default",
                 "playSound" => true,
             ),
-            "to" => $token
+            "to" => $token,
+
         );
         $data_string = json_encode($data);
         $ch = curl_init();

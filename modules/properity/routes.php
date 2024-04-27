@@ -67,7 +67,15 @@ function properity_rest_api_init()
             ),
             'internet' => array(
                 'type' => 'array || object || string',
-            )
+            ),
+            'payememtSystem' => array(
+                'type' => 'string',
+                'required' => true,
+            ),
+            'notificationAlert' => array(
+                'type' => 'string',
+                'required' => true,
+            ),
         )
 
     ));
@@ -119,9 +127,6 @@ function properity_rest_api_init()
                 'type' => 'string || array || integer',
             ),
             'annualIncrease' => array(
-                'type' => 'string || array || integer',
-            ),
-            'paymentstatus' => array(
                 'type' => 'string || array || integer',
             ),
             'landlord' => array(
@@ -199,7 +204,7 @@ function properity_rest_api_init()
         'methods' => 'PUT',
         'callback' => 'updatePaymentStatus',
         'args' => array(
-            'paymentStatus' => array(
+            'amount' => array(
                 'type' => 'string',
             )
         )

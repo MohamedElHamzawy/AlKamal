@@ -37,7 +37,7 @@ function createLandlord($data){
 
  $img = $data['image'];
 
- 
+ if(!empty($img)){
         $image_data = base64_decode($img);
         $image_name = $data['name'] . "-" . "photo" . "." . "jpeg";
         $temp_file = wp_tempnam($image_name);
@@ -75,7 +75,7 @@ function createLandlord($data){
         }
         wp_update_attachment_metadata($attachment_id, $attachment_data);
         unlink($temp_file);
-
+}
 
     $landlordTable = $wpdb->prefix . 'alkamal_landlord';
     $propertyTable = $wpdb->prefix . 'alkamal_property';

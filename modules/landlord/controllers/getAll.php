@@ -27,8 +27,10 @@ function getAllLandlords(){
         $ll->name = $key->name;
         $ll->email = $key->email;
         $ll->phone = $key->phone;
-        $ll->image = wp_get_attachment_url($key->image);
-        $properties = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$propertyTable} WHERE landlordId = {$key->id}"));
+        if (isset($key->image) && !empty($key->image)) {
+            $ll->image = wp_get_attachment_url($key->image);
+        }
+        $properties = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$propertyTable} WHERE landlordId = {$key->id} AND isDeleted = 0"));
             if(!$properties){
                 $prop->id = '';
                 $prop->name = '';

@@ -19,11 +19,12 @@ function rest_api_launch_activation()
         paperContractNumber TEXT,
         digitlyContractNumber TEXT,
         insurance FLOAT,
+        paymentSystem INTEGER,
         commission FLOAT,
         annualIncrease FLOAT,
-        paymentStatus VARCHAR(25) NOT NULL DEFAULT 'unpaid',
+        isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
         landlordId BIGINT,
-        FOREIGN KEY (landlordId) REFERENCES " . $wpdb->prefix . "alkamal_landlord(id) ON DELETE CASCADE
+        FOREIGN KEY (landlordId) REFERENCES " . $wpdb->prefix . "alkamal_landlord(id)
     )");
     dbDelta("CREATE TABLE " . $wpdb->prefix . "alkamal_electricity (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -64,4 +65,23 @@ function rest_api_launch_activation()
         password TEXT,
         token TEXT
         )");
+
+
+    dbDelta("CREATE TABLE " . $wpdb->prefix . "alkamal_payment (
+        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        propertyId BIGINT NOT NULL,
+        FOREIGN KEY (propertyId) REFERENCES " . $wpdb->prefix . "alkamal_property(id) ON DELETE CASCADE,
+        amount FLOAT,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        
+    )");
+    dbDelta("CREATE TABLE " . $wpdb->prefix . "alkamal_notification (
+        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        propertyId BIGINT NOT NULL,
+        FOREIGN KEY (propertyId) REFERENCES " . $wpdb->prefix . "alkamal_property(id) ON DELETE CASCADE,
+        alertTime INTEGER,
+        nextNotificationDate DATETIME,
+        lastNotificationDate DATETIME
+    )");
+
 }

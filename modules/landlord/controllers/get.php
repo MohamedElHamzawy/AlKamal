@@ -11,7 +11,7 @@ function getLandlord($body) {
     $result = $wpdb->get_row($wpdb->prepare(
         "SELECT * FROM $table_name a
         INNER JOIN $propertyTable b
-        ON a.id = b.landlordId 
+        ON a.id = b.landlordId AND b.isDeleted = 0
         WHERE a.id = $id"));
     $result->image = wp_get_attachment_image_url($result->image);
 
