@@ -5,22 +5,29 @@ require 'controllers/update.php';
 require 'controllers/delete.php';
 require 'controllers/deletePropertyLandlord.php';
 require 'controllers/paymentStatus.php';
+require 'controllers/getProperty.php';
 function properity_rest_api_init()
 {
     $namespace = 'alkamal/v0';
 
-    register_rest_route("$namespace", '/property', array(
+    register_rest_route("$namespace", '/property/(?P<id>\d+)', array(
         'methods' => 'GET',
-        'callback' => 'getAllProperties',
+        'callback' => 'getProperty',
         'args' => array(
             'get_query_params' => array(
                 'id' => array(
                     'type' => 'string || integer',
-                    'required' => false
+                    'required' => true
                 )
             )
         )
     ));
+
+    register_rest_route("$namespace", '/property', array(
+        'methods' => 'GET',
+        'callback' => 'getAllProperties',
+    ));
+
     register_rest_route("$namespace", '/property', array(
         'methods' => 'POST',
         'callback' => 'createProperty',
@@ -208,7 +215,7 @@ function properity_rest_api_init()
         'methods' => 'PUT',
         'callback' => 'deletePropertyLandlord',
     ));
-    register_rest_route("$namespace", "/property/paymentstatus/(?P<id>\d+)", array(
+    register_rest_route("$namespace", "/property/payment/(?P<id>\d+)", array(
         'methods' => 'PUT',
         'callback' => 'updatePaymentStatus',
         'args' => array(
