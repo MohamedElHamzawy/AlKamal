@@ -76,7 +76,7 @@ function properity_rest_api_init()
             'internet' => array(
                 'type' => 'array || object || string',
             ),
-            'payememtSystem' => array(
+            'paymentSystem' => array(
                 'type' => 'string',
                 'required' => true,
             ),
