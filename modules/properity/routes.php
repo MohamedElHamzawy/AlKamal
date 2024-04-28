@@ -12,6 +12,14 @@ function properity_rest_api_init()
     register_rest_route("$namespace", '/property', array(
         'methods' => 'GET',
         'callback' => 'getAllProperties',
+        'args' => array(
+            'get_query_params' => array(
+                'id' => array(
+                    'type' => 'string || integer',
+                    'required' => false
+                )
+            )
+        )
     ));
     register_rest_route("$namespace", '/property', array(
         'methods' => 'POST',

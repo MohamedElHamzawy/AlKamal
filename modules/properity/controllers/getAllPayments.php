@@ -14,7 +14,11 @@ function getAllPayments($body)
         return $payments;
     } else {
         $totalPages = ceil(count($payments) / $body['perpage']);
+        if ($totalPages < $body['page']) {
+            return "total pages is". $totalPages;
+        } else {
         $pagedata = array_slice($payments, ($body['page'] - 1) * $body['perpage'], $body['perpage']);
         return $pagedata;
     }
+}
 }

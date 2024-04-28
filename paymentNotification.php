@@ -51,8 +51,8 @@ function sendunpaidnotfication()
             ));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             $result = curl_exec($ch);
-
-            $nextmonthnotif = date('Y-m-d', strtotime('+1 month', strtotime($notification->nextNotificationDate))); 
+            $days = $notification->paymentSystem - $notification->alertTime;
+            $nextmonthnotif = date('Y-m-d', strtotime('+{$days} days', strtotime($notification->nextNotificationDate))); 
             $wpdb->update($notTable, array('nextNotificationDate' => $nextmonthnotif , 'lastNotificationDate' => date('Y-m-d')), array('id' => $notification->notificationId));
         }
     }

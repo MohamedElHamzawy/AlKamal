@@ -6,7 +6,7 @@ function createProperty($body)
     $propertyData = array();
     $propertyTable = $wpdb->prefix . 'alkamal_property';
 
-    foreach (array('payememtSystem', 'propertyName', 'address', 'area', 'status', 'startAt', 'endAt', 'images', 'rentValue', 'depositValue', 'meterPrice', 'paperContractNumber', 'digitlyContractNumber', 'insurance', 'commission', 'annualIncrease') as $key) {
+    foreach (array('paymentSystem', 'propertyName', 'address', 'area', 'status', 'startAt', 'endAt', 'images', 'rentValue', 'depositValue', 'meterPrice', 'paperContractNumber', 'digitlyContractNumber', 'insurance', 'commission', 'annualIncrease') as $key) {
         if (isset($body[$key]) && !empty($body[$key])) {
             if ($key == 'images') {
                 $reqImages = $body[$key];
@@ -62,7 +62,7 @@ function createProperty($body)
     }
 
     try {
-        $wpdb->insert($propertyTable, $propertyData);
+        $res = $wpdb->insert($propertyTable, $propertyData);
         $propertyId = $wpdb->insert_id;
 
         if (isset($body['electricity']) && !empty($body['electricity'])) {
@@ -203,7 +203,10 @@ function createProperty($body)
         $wpdb->insert($notificationTable, $notificationData);
 
 
-        wp_send_json_success("Property created successfully", 200);
+        return array(
+           'propertyId' => $wpdb->insert_id,
+           'lastquery' => $wpdb->last_query,
+            );
     } catch (Exception $e) {
         wp_send_json_error($e->getMessage(), 401);
     }
