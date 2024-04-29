@@ -19,5 +19,9 @@ function getLandlordPropertys($body)
         $prop = getProperty($propdata);
         array_push($landlordProperty, $prop[0]);
     }
-    return $landlordProperty;
+
+    $result = new WP_REST_Response($landlordProperty, 200);
+    $result->set_headers(array('Cache-Control' => 'no-cache'));
+
+    return $result;
 }
