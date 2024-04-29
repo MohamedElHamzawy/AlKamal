@@ -4,11 +4,13 @@ require 'controllers/getAll.php';
 require 'controllers/update.php';
 require 'controllers/delete.php';
 require 'controllers/deletePropertyLandlord.php';
-require 'controllers/paymentStatus.php';
 require 'controllers/getProperty.php';
 require 'controllers/getAllPayments.php';
 require 'controllers/deletePayment.php';
 require 'controllers/updatePayment.php';
+require 'controllers/createPayment.php';
+require 'controllers/getPropertyPayment.php';
+require 'controllers/getMonthPayments.php';
 function properity_rest_api_init()
 {
     $namespace = 'alkamal/v0';
@@ -94,6 +96,10 @@ function properity_rest_api_init()
                 'type' => 'string',
                 'required' => true,
             ),
+            'isCustom' => array(
+                'type' => 'boolean',
+                'required' => false,
+            )
         )
 
     ));
@@ -228,6 +234,23 @@ function properity_rest_api_init()
             )
         )
     ));
+    register_rest_route("$namespace", "/property/payments/(?P<id>\d+)", array(
+        'methods' => 'GET',
+        'callback' => 'getPropertyPayment',
+        'args' => array(
+            'get_query_params' => array(
+                'page' => array(
+                    'type' => 'string || integer',
+                    'required' => true
+                ),
+                'perPage' => array(
+                    'type' => 'string || integer',
+                    'required' => true
+                )
+            )
+        )
+
+    ));
     register_rest_route("$namespace", "/payments", array(
         'methods' => 'GET',
         'callback' => 'getAllPayments',
@@ -262,4 +285,9 @@ function properity_rest_api_init()
             )
         )
     ));
+    register_rest_route("$namespace", "/month-payments", array(
+        'methods' => 'GET',
+        'callback' => 'getMonthPayments',
+    ));
+    
 }
