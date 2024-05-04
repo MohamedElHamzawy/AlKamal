@@ -1,6 +1,5 @@
 <?php
-function sendunpaidnotfication()
-{
+function sendNotification(){
     global $wpdb;
     $notTable = $wpdb->prefix . "alkamal_notification";
     $propTable = $wpdb->prefix . "alkamal_property";

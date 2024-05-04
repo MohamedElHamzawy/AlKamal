@@ -16,7 +16,7 @@ function getPropertyPayment($body)
     WHERE propertyId = %d;" , $body['id']));
     $totalPages = ceil($totalRows / $per_page);
     $ress = array(
-        'data' => $result,
+        'payments' => $result,
         'totalPages' => $totalPages
         
     );

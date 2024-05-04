@@ -11,6 +11,7 @@ require 'controllers/updatePayment.php';
 require 'controllers/createPayment.php';
 require 'controllers/getPropertyPayment.php';
 require 'controllers/getMonthPayments.php';
+require 'controllers/sendNotification.php';
 function properity_rest_api_init()
 {
     $namespace = 'alkamal/v0';
@@ -38,67 +39,44 @@ function properity_rest_api_init()
         'callback' => 'createProperty',
         'args' => array(
             'propertyName' => array(
-                'type' => 'string',
             ),
             'address' => array(
-                'type' => 'string',
             ),
             'area' => array(
-                'type' => 'string',
             ),
             'status' => array(
-                'type' => 'string',
             ),
             'startAt' => array(
-                'type' => 'string',
             ),
             'endAt' => array(
-                'type' => 'string',
             ),
             'images' => array(
-                'type' => 'array',
             ),
             'rentValue' => array(
-                'type' => 'number',
             ),
             'depositValue' => array(
-                'type' => 'number',
             ),
             'meterPrice' => array(
-                'type' => 'number',
             ),
             'paperContractNumber' => array(
-                'type' => 'string',
             ),
             'digitlyContractNumber' => array(
-                'type' => 'string',
             ),
             'insurance' => array(
-                'type' => 'number',
             ),
             'commission' => array(
-                'type' => 'number',
             ),
             'annualIncrease' => array(
-                'type' => 'number',
             ),
             'elecricity' => array(
-                'type' => 'array',
             ),
             'internet' => array(
-                'type' => 'array || object || string',
             ),
             'paymentSystem' => array(
-                'type' => 'string',
-                'required' => true,
             ),
             'notificationAlert' => array(
-                'type' => 'string',
-                'required' => true,
             ),
             'isCustom' => array(
-                'type' => 'boolean',
-                'required' => false,
             )
         )
 
@@ -263,10 +241,6 @@ function properity_rest_api_init()
                 'perPage' => array(
                     'type' => 'integer || string',
                     'required' => false
-                ),
-                'currentMonth' => array(
-                    'type' => 'boolean',
-                    'required' => false
                 )
             )
         )
@@ -288,6 +262,10 @@ function properity_rest_api_init()
     register_rest_route("$namespace", "/month-payments", array(
         'methods' => 'GET',
         'callback' => 'getMonthPayments',
+    ));
+    register_rest_route("$namespace", "/notification", array(
+        'methods' => 'GET',
+        'callback' => 'sendNotification',
     ));
     
 }

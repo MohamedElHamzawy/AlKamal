@@ -23,6 +23,7 @@ function rest_api_launch_activation()
         commission FLOAT,
         annualIncrease FLOAT,
         isDeleted BOOLEAN NOT NULL DEFAULT FALSE,
+        shiftedPayment INTEGER DEFAULT 0,
         landlordId BIGINT,
         FOREIGN KEY (landlordId) REFERENCES " . $wpdb->prefix . "alkamal_landlord(id)
     )");

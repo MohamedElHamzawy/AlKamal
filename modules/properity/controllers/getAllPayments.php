@@ -2,73 +2,82 @@
 class getAllPayments
 {
     public $id;
+    public $propertyId;
     public $amount;
     public $createdAt;
     public $propertyName;
     public $image;
 }
+class getAllPaymentsResponse
+{
+    public $payments;
+    public $totalPages;
+    public $rentValue = 0;
+    public $collectedValue = 0;
+    public $persentage = 0;
+}
 function getAllPayments($body)
 {
-    if (!isset($body['currentMonth'])) {
-        global $wpdb;
-        $totalPages = 1;
-        $tablePayments = $wpdb->prefix . "alkamal_payment";
-        $tableProperties = $wpdb->prefix . "alkamal_property";
-        $sql = "SELECT * FROM $tablePayments payments ORDER BY payments.createdAt DESC  ";
+    global $wpdb;
+    $totalPages = 1;
+    $tablePayments = $wpdb->prefix . "alkamal_payment";
+    $tableProperties = $wpdb->prefix . "alkamal_property";
+    $tableNotification = $wpdb->prefix . "alkamal_notification";
 
-        $Payments = $wpdb->get_results($wpdb->prepare($sql));
-        if (isset($body['perPage']) && is_numeric($body['perPage']) && isset($body['page']) && is_numeric($body['page'])  ) {
-            $per_page = (int) $body['perPage'];
-            $page_number =(int) $body['page'];
-            $offset = (int) ($page_number - 1) * $per_page;
-            $payments = array_slice($Payments, $offset, $per_page);
-            $totalPages = ceil((int) (count($Payments)) / (int) $per_page);
-        }
-        $responsePayments = array();
-        if ($wpdb->num_rows > 0) {
-            foreach ($payments as $payment) {
-                $prop =  $wpdb->get_results($wpdb->prepare("SELECT * FROM $tableProperties WHERE id = %d", $payment->propertyId))[0];
-                $image = explode(',', $prop->images)[0];
-                $pay = new getAllPayments();
-                if (wp_get_attachment_url($image) != false) {
-                    $pay->image = wp_get_attachment_url($image);
-                }
-                $pay->id = $payment->id;
-                $pay->amount = $payment->amount;
-                $pay->createdAt = $payment->createdAt;
-                $pay->propertyName = $prop->propertyName;
-                array_push($responsePayments, $pay);
-            }
-        } else {
-            $image = explode(',', $payments[0]->images)[0];
-            if (wp_get_attachment_url($image) != false) {
-                $payments->images = wp_get_attachment_url($image);
+    $per_page = (int) $body['perPage'];
+    $page_number = (int) $body['page'];
+    $offset = (int) ($page_number - 1) * $per_page;
+
+    $sql = "SELECT payments.id id, payments.propertyId propertyId, payments.amount amount, payments.createdAt createdAt, properties.propertyName propertyName, properties.images image
+    FROM $tablePayments payments 
+    INNER JOIN $tableProperties properties ON payments.propertyId = properties.id AND properties.isDeleted = 0 
+    ORDER BY payments.createdAt DESC ";
+
+    $payments = $wpdb->get_results($wpdb->prepare($sql));
+
+    if ($wpdb->num_rows > 0) {
+        foreach ($payments as $payment) {
+            $payment->image = explode(',', $payment->image)[0];
+            if (wp_get_attachment_url($payment->image) != false) {
+                $payment->image  = wp_get_attachment_url($payment->image);
             }
         }
-        $res = array(
-            'payments' => $responsePayments ,
-        'totalPages' => $totalPages);
-        $result = new WP_REST_Response($res, 200);
-        $result->set_headers(array('Cache-Control' => 'no-cache'));
-        return $result;
-    } else {
-        global $wpdb;
-        $tablePayments = $wpdb->prefix . "alkamal_payment";
-        $tableProperties = $wpdb->prefix . "alkamal_property";
-        $currentMonth = date('m'); // Numeric representation of the month (01-12)
-        $currentYear = date('Y');  // Year (YYYY format)
-
-        $sql = "SELECT SUM(payments.amount) as amount
-                FROM $tablePayments payments
-                INNER JOIN $tableProperties properties ON payments.propertyId = properties.id
-                WHERE MONTH(payments.createdAt) = $currentMonth 
-                AND YEAR(payments.createdAt) = $currentYear
-                ORDER BY payments.createdAt DESC  ";
-
-        $payments = $wpdb->get_results($wpdb->prepare($sql));
-        $amount = $payments[0]->amount;
-        $result = new WP_REST_Response($amount, 200);
-        $result->set_headers(array('Cache-Control' => 'no-cache'));
-        return $amount;
     }
+
+
+    $sql = "SELECT SUM(c.rentValue) AS rentValue  
+    FROM $tableNotification AS a  
+    INNER JOIN $tableProperties AS c ON a.propertyId = c.id AND c.isDeleted = 0 
+    WHERE MONTH(DATE_ADD(a.nextNotificationDate, INTERVAL a.alertTime DAY)) = MONTH(NOW()); ";
+    $rentValue = $wpdb->get_results($wpdb->prepare($sql));
+    $sql = "SELECT SUM(a.amount) as depositValue 
+    FROM $tablePayments AS a
+    INNER JOIN $tableProperties AS c ON a.propertyId = c.id AND c.isDeleted = 0 
+    WHERE MONTH(a.createdAt) = MONTH(NOW()) ; ";
+    $depositValue = $wpdb->get_results($wpdb->prepare($sql));
+    $res = new getAllPaymentsResponse();
+    $res->payments = $payments;
+    $res->totalPages = $totalPages;
+    $shiftedPayment = $wpdb->get_var($wpdb->prepare(
+        "SELECT SUM(shiftedPayment) FROM $tableProperties WHERE isDeleted = 0 "
+    ));
+    if (is_numeric($rentValue[0]->rentValue) && $rentValue[0]->rentValue > 1) {
+        if ($shiftedPayment != null) {
+            $res->rentValue = (int) $rentValue[0]->rentValue + (int) $shiftedPayment;
+            // $res->rentValue = (int) $rentValue[0]->rentValue;
+        }
+    }
+    if (is_numeric($depositValue[0]->depositValue) && $depositValue[0]->depositValue > 1) {
+        $res->collectedValue = (int) $depositValue[0]->depositValue;
+    }
+    if ($res->rentValue > 0) {
+        $res->persentage = (int) (($res->collectedValue / $res->rentValue)) * 100;
+    } else {
+        $res->persentage = 100;
+    }
+
+
+    $result = new WP_REST_Response($res, 200);
+    $result->set_headers(array('Cache-Control' => 'no-cache'));
+    return $result;
 }

@@ -3,8 +3,12 @@ function updateProperty($body)
 {
     global $wpdb;
     $propertyTable = $wpdb->prefix . 'alkamal_property';
-
-    $property = $wpdb->get_row("SELECT * FROM $propertyTable WHERE id = " . $body['id']);
+    $notificationTable = $wpdb->prefix . 'alkamal_notification';
+    $property = $wpdb->get_row("
+    SELECT p.*, n.alertTime 
+    FROM $propertyTable p
+    INNER JOIN $notificationTable n ON p.id = n.propertyId
+     WHERE p.id = " . $body['id']);
 
     if (!$property) {
         return new WP_Error(
@@ -15,7 +19,7 @@ function updateProperty($body)
     }
 
     $propertyData = array();
-    foreach (array('propertyName', 'address', 'area', 'status', 'startAt', 'endAt', 'images', 'rentValue', 'depositValue', 'meterPrice', 'paperContractNumber', 'digitlyContractNumber', 'insurance', 'commission', 'annualIncrease') as $key) {
+    foreach (array('propertyName', 'address', 'area' , 'startAt', 'status', 'endAt', 'images', 'rentValue', 'depositValue', 'meterPrice', 'paperContractNumber', 'digitlyContractNumber', 'insurance', 'commission', 'annualIncrease') as $key) {
         if (isset($body[$key]) && !empty($body[$key])) {
             if ($key == 'images') {
                 $reqImages = $body[$key];
@@ -70,13 +74,64 @@ function updateProperty($body)
                 }
                 $images = implode(',', $imgArr);
                 $propertyData[$key] = $images;
-            } else {
-                $propertyData[$key] = $body[$key];
+            } 
+            elseif($key == 'startAt'){
+                if(isset($body['rentValue']) && !empty($body['rentValue'])){
+                $propertyData['shiftedPayment'] = $body['startAt'];
+            }
+            else{
+                $propertyData['shiftedPayment'] = $property->rentValue;
             }
         }
+            else {
+                $propertyData[$key] = $body[$key];
+            }
+
+        }
+    }
+    $wpdb->update($propertyTable, $propertyData, array('id' => $property->id));
+    $notData = array();
+    $notData['notificationAlert'] = $property->alertTime;
+    $notData['paymentSystem']  = $property->paymentSystem;
+    $notData['startAt'] = $property->startAt;
+    $notData['propertyId'] = $property->id;
+    if(isset($body['startAt'])){
+        $notData['startAt'] = $body['startAt'];
+        $numdays = $property->paymentSystem - $notData['alertTime'];
+        $finalNotday = strtotime("+$numdays days", strtotime($notData['startAt']));
+        $sqlDateFormat = date('Y-m-d H:i:s', $finalNotday); // Format the timestamp as YYYY-MM-DD for SQL
+        $notData['nextNotificationDate'] = $sqlDateFormat;
+
+        
+    }
+    if(isset($body['notificationAlert'] )){
+        $notData['alertTime'] = $body['alertTime'];
+        $numdays = $property->paymentSystem - $notData['alertTime'];
+        $finalNotday = strtotime("+$numdays days", strtotime($notData['startAt']));
+        $sqlDateFormat = date('Y-m-d H:i:s', $finalNotday); // Format the timestamp as YYYY-MM-DD for SQL
+        $notData['nextNotificationDate'] = $sqlDateFormat;
+    }
+    if(isset($body['paymentSystem'])){
+        $notData['paymentSystem'] = $body['paymentSystem'];
+    
+        if(isset($body['isCustom']) && $body['isCustom'] == 1){
+            $nextnot = (int) $body['paymentSystem'] - (int) $body['notificationAlert'];
+            $finalNotday = strtotime("+$nextnot days", strtotime($notData['startAt'])); 
+        }
+        elseif(isset($body['isCustom']) && $body['isCustom'] == 1){
+            $days = (int) $body['paymentSystem'] / 30 ;
+            $nextnot = $days- (int) $body['notificationAlert'];
+            $finalNotday = strtotime("+$nextnot months", strtotime($notData['startAt']));
+            $sqlDateFormat = date('Y-m-d H:i:s', $finalNotday); // Format the timestamp as YYYY-MM-DD for SQL
+            $notData['nextNotificationDate'] = $sqlDateFormat;    
+        }
+        
     }
 
-    $wpdb->update($propertyTable, $propertyData, array('id' => $property->id));
+
+    
+
+    $wpdb->update($notificationTable, $notData, array('propertyId' => $property->id));
 
     wp_send_json_success("Property updated successfully", 200);
 }
