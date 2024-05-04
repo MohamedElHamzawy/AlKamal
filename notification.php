@@ -6,22 +6,26 @@ function sendunpaidnotfication()
     $propTable = $wpdb->prefix . "alkamal_property";
     $tableUser = $wpdb->prefix . "alkamal_user";
     $notifications = $wpdb->get_results(
-        "SELECT notif.nextNotificationDate , notif.lastNotificationDate  , notif.id notificationId , notif.alertTime , prop.id propertyId , prop.paymentSystem , prop.propertyName
+        "SELECT notif.nextNotificationDate , notif.lastNotificationDate  , notif.id notificationId , notif.alertTime , prop.id propertyId , prop.paymentSystem , prop.propertyName , prop.shiftedPayment
         FROM $notTable  notif
-        INNER JOIN $propTable  prop ON notif.propertyId = prop.id AND prop.isDeleted = 0"
+        INNER JOIN $propTable  prop ON notif.propertyId = prop.id AND prop.isDeleted = 0
+        WHERE notif.nextNotificationDate = CURDATE()"
     );
-    $notificationInAction  = array();
-    foreach ($notifications as $notification) {
-        $paymentDate = strtotime("-$notification->alertTime days", strtotime($notification->nextNotificationDate)); 
-        $paymentDate = date('Y-m-d', $paymentDate); // Format the timestamp as YYYY-MM-DD for SQL
 
-        if ($paymentDate = date('Y-m-d')) {
-            array_push($notificationInAction, $notification);
-        }
+    $paymentDate = $wpdb->get_results(
+        "SELECT prop.rentValue , prop.id propertyId , prop.paymentSystem , prop.propertyName , prop.shiftedPayment
+        FROM $notTable  notif
+        INNER JOIN $propTable  prop ON notif.propertyId = prop.id AND prop.isDeleted = 0
+        WHERE CURDATE() = DATE_ADD(notif.nextNotificationDate, INTERVAL notif.alertTime DAY)"
+    );
+    foreach ($paymentDate as $payment) {
+        $newShiftedPayment = $payment->shiftedPayment - $payment->rentValue;
+        $wpdb->update($propTable, array('shiftedPayment' => $newShiftedPayment), array('id' => $payment->propertyId));
     }
+
     $resultUser = $wpdb->get_results("SELECT * FROM $tableUser");
     foreach ($resultUser as $user) {
-        foreach ($notificationInAction as $notification) {
+        foreach ($notifications as $notification) {
             $notBody = "حان وقت تحصيل دفعة هذا العقار ";
             $title = $notification->propertyName;
             $token = $user->token;
