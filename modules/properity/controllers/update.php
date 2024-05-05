@@ -19,7 +19,7 @@ function updateProperty($body)
     }
 
     $propertyData = array();
-    foreach (array('propertyName', 'address', 'area' , 'startAt', 'status', 'endAt', 'images', 'rentValue', 'depositValue', 'meterPrice', 'paperContractNumber', 'digitlyContractNumber', 'insurance', 'commission', 'annualIncrease') as $key) {
+    foreach (array('propertyName', 'address', 'area', 'startAt', 'status', 'endAt', 'images', 'rentValue', 'depositValue', 'meterPrice', 'paperContractNumber', 'digitlyContractNumber', 'insurance', 'commission', 'annualIncrease') as $key) {
         if (isset($body[$key]) && !empty($body[$key])) {
             if ($key == 'images') {
                 $reqImages = $body[$key];
@@ -74,19 +74,18 @@ function updateProperty($body)
                 }
                 $images = implode(',', $imgArr);
                 $propertyData[$key] = $images;
-            } 
-            elseif($key == 'startAt'){
-                if(isset($body['rentValue']) && !empty($body['rentValue'])){
-                $propertyData['shiftedPayment'] = $body['startAt'];
-            }
-            else{
-                $propertyData['shiftedPayment'] = $property->rentValue;
-            }
-        }
-            else {
+            } elseif ($key == 'startAt') {
+                if (isset($body['rentValue']) && !empty($body['rentValue'])) {
+                    $propertyData['shiftedPayment'] = $body['startAt'];
+                } else {
+                    $propertyData['shiftedPayment'] = $property->rentValue;
+                }
+            } elseif ($key == 'rentValue') {
+                $rentDiff = $property->rentValue - $body['rentValue'];
+                $propertyData['shiftedPayment'] = $property->shiftedPayment - $rentDiff;
+            } else {
                 $propertyData[$key] = $body[$key];
             }
-
         }
     }
     $wpdb->update($propertyTable, $propertyData, array('id' => $property->id));
@@ -95,41 +94,37 @@ function updateProperty($body)
     $notData['paymentSystem']  = $property->paymentSystem;
     $notData['startAt'] = $property->startAt;
     $notData['propertyId'] = $property->id;
-    if(isset($body['startAt'])){
+    if (isset($body['startAt'])) {
         $notData['startAt'] = $body['startAt'];
         $numdays = $property->paymentSystem - $notData['alertTime'];
         $finalNotday = strtotime("+$numdays days", strtotime($notData['startAt']));
         $sqlDateFormat = date('Y-m-d H:i:s', $finalNotday); // Format the timestamp as YYYY-MM-DD for SQL
         $notData['nextNotificationDate'] = $sqlDateFormat;
-
-        
     }
-    if(isset($body['notificationAlert'] )){
+    if (isset($body['notificationAlert'])) {
         $notData['alertTime'] = $body['alertTime'];
         $numdays = $property->paymentSystem - $notData['alertTime'];
         $finalNotday = strtotime("+$numdays days", strtotime($notData['startAt']));
         $sqlDateFormat = date('Y-m-d H:i:s', $finalNotday); // Format the timestamp as YYYY-MM-DD for SQL
         $notData['nextNotificationDate'] = $sqlDateFormat;
     }
-    if(isset($body['paymentSystem'])){
+    if (isset($body['paymentSystem'])) {
         $notData['paymentSystem'] = $body['paymentSystem'];
-    
-        if(isset($body['isCustom']) && $body['isCustom'] == 1){
+
+        if (isset($body['isCustom']) && $body['isCustom'] == 1) {
             $nextnot = (int) $body['paymentSystem'] - (int) $body['notificationAlert'];
-            $finalNotday = strtotime("+$nextnot days", strtotime($notData['startAt'])); 
-        }
-        elseif(isset($body['isCustom']) && $body['isCustom'] == 1){
-            $days = (int) $body['paymentSystem'] / 30 ;
-            $nextnot = $days- (int) $body['notificationAlert'];
+            $finalNotday = strtotime("+$nextnot days", strtotime($notData['startAt']));
+        } elseif (isset($body['isCustom']) && $body['isCustom'] == 1) {
+            $days = (int) $body['paymentSystem'] / 30;
+            $nextnot = $days - (int) $body['notificationAlert'];
             $finalNotday = strtotime("+$nextnot months", strtotime($notData['startAt']));
             $sqlDateFormat = date('Y-m-d H:i:s', $finalNotday); // Format the timestamp as YYYY-MM-DD for SQL
-            $notData['nextNotificationDate'] = $sqlDateFormat;    
+            $notData['nextNotificationDate'] = $sqlDateFormat;
         }
-        
     }
 
 
-    
+
 
     $wpdb->update($notificationTable, $notData, array('propertyId' => $property->id));
 
@@ -152,17 +147,17 @@ function updateElectricity($body)
     }
 
     $electricityData = array();
-    foreach (array('propertyId', 'sourceOfElectricity', 'electricCounterNumber', 'accountNumber', 'bill', 'receipt', 'bond' , 'paymentStatus' , 'landlordId') as $key) {
+    foreach (array('propertyId', 'sourceOfElectricity', 'electricCounterNumber', 'accountNumber', 'bill', 'receipt', 'bond', 'paymentStatus', 'landlordId') as $key) {
         if (isset($body[$key]) && !empty($body[$key])) {
             if (in_array($key, array('bill', 'receipt', 'bond'))) {
                 $reqImages = $body[$key];
                 $imgArr = array();
-                    if (isset($electricity->{$key}) && !empty($electricity->{$key})) {
-                        $oldImages = explode(',', $electricity->{$key});
-                        foreach ($oldImages as $oldImage) {
-                            wp_delete_attachment($oldImage, false);
-                        }
+                if (isset($electricity->{$key}) && !empty($electricity->{$key})) {
+                    $oldImages = explode(',', $electricity->{$key});
+                    foreach ($oldImages as $oldImage) {
+                        wp_delete_attachment($oldImage, false);
                     }
+                }
                 $i = 0;
                 foreach ($reqImages as $img) {
                     $i++;
@@ -239,12 +234,12 @@ function updateInternet($body)
             if (in_array($key, array('bill', 'receipt', 'bond'))) {
                 $reqImages = $body[$key];
                 $imgArr = array();
-                    if (isset($internet->{$key}) && !empty($internet->{$key})) {
-                        $oldImages = explode(',', $internet->{$key});
-                        foreach ($oldImages as $oldImage) {
-                            wp_delete_attachment($oldImage, false);
-                        }
+                if (isset($internet->{$key}) && !empty($internet->{$key})) {
+                    $oldImages = explode(',', $internet->{$key});
+                    foreach ($oldImages as $oldImage) {
+                        wp_delete_attachment($oldImage, false);
                     }
+                }
                 $i = 0;
                 foreach ($reqImages as $img) {
                     $i++;

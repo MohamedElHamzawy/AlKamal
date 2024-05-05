@@ -6,7 +6,7 @@ function sendunpaidnotfication()
     $propTable = $wpdb->prefix . "alkamal_property";
     $tableUser = $wpdb->prefix . "alkamal_user";
     $notifications = $wpdb->get_results(
-        "SELECT notif.nextNotificationDate , notif.lastNotificationDate  , notif.id notificationId , notif.alertTime , prop.id propertyId , prop.paymentSystem , prop.propertyName , prop.shiftedPayment
+        "SELECT notif.nextNotificationDate , notif.lastNotificationDate  , notif.id notificationId , notif.alertTime , prop.id propertyId , prop.paymentSystem , prop.propertyName , prop.shiftedPayment , prop.endAt
         FROM $notTable  notif
         INNER JOIN $propTable  prop ON notif.propertyId = prop.id AND prop.isDeleted = 0
         WHERE notif.nextNotificationDate = CURDATE()"
@@ -61,7 +61,12 @@ function sendunpaidnotfication()
             $result = curl_exec($ch);
             $numdays = $notification->paymentSystem - $notification->alertTime;
             $nextmonthnotif = date('Y-m-d', strtotime("+$numdays days", strtotime($notification->nextNotificationDate)));
-            $wpdb->update($notTable, array('nextNotificationDate' => $nextmonthnotif, 'lastNotificationDate' => date('Y-m-d')), array('id' => $notification->notificationId));
+            if ($nextmonthnotif < $notification->endAt) {
+                $wpdb->update($notTable, array('nextNotificationDate' => $nextmonthnotif, 'lastNotificationDate' => date('Y-m-d')), array('id' => $notification->notificationId));
+            }
+            else{
+                $wpdb->update($notTable, array('nextNotificationDate' => NULL, 'lastNotificationDate' => date('Y-m-d')), array('id' => $notification->notificationId));
+            }
         }
     }
 }

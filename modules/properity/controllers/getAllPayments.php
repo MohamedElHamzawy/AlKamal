@@ -44,36 +44,65 @@ function getAllPayments($body)
         }
     }
 
+    // $sql1 = "SELECT SUM(c.rentValue) AS rentValue  
+    // FROM $tableNotification AS a  
+    // INNER JOIN $tableProperties AS c ON a.propertyId = c.id AND c.isDeleted = 0 
+    // WHERE MONTH(DATE_ADD(a.nextNotificationDate, INTERVAL a.alertTime DAY)) = MONTH(NOW()); OR a.lastNotificationDate = NULL ";
+    // $sql2 = "SELECT SUM(a.amount) as depositValue 
+    // FROM $tablePayments AS a
+    // INNER JOIN $tableProperties AS c ON a.propertyId = c.id AND c.isDeleted = 0 
+    // WHERE MONTH(a.createdAt) = MONTH(NOW()) ; ";
+    // $rentValue = $wpdb->get_results($wpdb->prepare($sql1));
+    // $depositValue = $wpdb->get_results($wpdb->prepare($sql2));
+    // $shiftedPayment = $wpdb->get_var($wpdb->prepare(
+    //     "SELECT SUM(shiftedPayment) FROM $tableProperties WHERE isDeleted = 0"
+    // ));
 
-    $sql = "SELECT SUM(c.rentValue) AS rentValue  
-    FROM $tableNotification AS a  
-    INNER JOIN $tableProperties AS c ON a.propertyId = c.id AND c.isDeleted = 0 
-    WHERE MONTH(DATE_ADD(a.nextNotificationDate, INTERVAL a.alertTime DAY)) = MONTH(NOW()); ";
-    $rentValue = $wpdb->get_results($wpdb->prepare($sql));
-    $sql = "SELECT SUM(a.amount) as depositValue 
-    FROM $tablePayments AS a
-    INNER JOIN $tableProperties AS c ON a.propertyId = c.id AND c.isDeleted = 0 
-    WHERE MONTH(a.createdAt) = MONTH(NOW()) ; ";
-    $depositValue = $wpdb->get_results($wpdb->prepare($sql));
+    $sql = "SELECT SUM(a.rentValue) AS rentValue, SUM(a.shiftedPayment) AS shiftedPayment
+      FROM $tableNotification AS c 
+      INNER JOIN $tableProperties AS a ON c.propertyId = a.id AND a.isDeleted = 0
+      WHERE MONTH(DATE_ADD(c.nextNotificationDate, INTERVAL c.alertTime DAY)) = MONTH(NOW());";
+
+    $report = $wpdb->get_results($wpdb->prepare($sql))[0];
+    $sql = "SELECT SUM(a.amount) as CollectedValue
+      FROM $tablePayments AS a
+      INNER JOIN $tableProperties AS b ON a.propertyId = b.id AND b.isDeleted = 0
+      WHERE MONTH(a.createdAt) = MONTH(NOW()) ;";
+    $collectedValue = $wpdb->get_results($wpdb->prepare($sql))[0];
+    $rentValue = $report->rentValue;
+    $shiftedPayment = $report->shiftedPayment;
+    $depositValue = $collectedValue;
     $res = new getAllPaymentsResponse();
     $res->payments = $payments;
     $res->totalPages = $totalPages;
-    $shiftedPayment = $wpdb->get_var($wpdb->prepare(
-        "SELECT SUM(shiftedPayment) FROM $tableProperties WHERE isDeleted = 0 "
-    ));
-    if (is_numeric($rentValue[0]->rentValue) && $rentValue[0]->rentValue > 1) {
-        if ($shiftedPayment != null) {
-            $res->rentValue = (int) $rentValue[0]->rentValue + (int) $shiftedPayment;
-            // $res->rentValue = (int) $rentValue[0]->rentValue;
-        }
+    if(!is_numeric($rentValue)){
+        $rentValue = 0;
     }
-    if (is_numeric($depositValue[0]->depositValue) && $depositValue[0]->depositValue > 1) {
-        $res->collectedValue = (int) $depositValue[0]->depositValue;
+    if(!is_numeric($shiftedPayment)){
+        $shiftedPayment = 0;
     }
+    if(!is_numeric($depositValue)){
+        $depositValue = 0;
+    }
+
+    $res->rentValue = (float) $rentValue + (float) $shiftedPayment;
+    $res->collectedValue = (float) $depositValue;
+
+    // if(is_numeric($rentValue) && $rentValue > 1){
+    //     $res->rentValue = (float) $rentValue + (float) $shiftedPayment;
+    // if (is_numeric($shiftedPayment) && $shiftedPayment > 1) {
+    //     if ($shiftedPayment != null) {
+    //         $res->rentValue = (float)$rentValue - (float) $shiftedPayment;
+             //// $res->rentValue = (int) $rentValue[0]->rentValue;
+    //     }
+    // }}
+    // if (is_numeric($depositValue) && $depositValue > 1) {
+    //     $res->collectedValue = (float) $depositValue;
+    // }
     if ($res->rentValue > 0) {
-        $res->persentage = (int) (($res->collectedValue / $res->rentValue)) * 100;
+        $res->persentage = (float) number_format((float) ((float) ($res->collectedValue / (float) $res->rentValue)) * 100.00 , 2,'.', '');
     } else {
-        $res->persentage = 100;
+        $res->persentage = 0;
     }
 
 

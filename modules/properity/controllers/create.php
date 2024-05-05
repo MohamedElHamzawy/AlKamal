@@ -63,7 +63,8 @@ function createProperty($body)
 
     try {
         if(isset($body['startAt']) && !empty($body['startAt']) && isset($body['rentValue']) && !empty($body['rentValue'])) {
-            $propertyData['shiftedPayment'] = $body['rentValue'];
+            $propertyData['shiftedPayment'] = (int) $body['rentValue'] - (int) $body['depositValue'];
+            $propertyData['startAt'] = $body['startAt'];
         }
         $res = $wpdb->insert($propertyTable, $propertyData);
         $propertyId = $wpdb->insert_id;
@@ -192,32 +193,68 @@ function createProperty($body)
             }
             $wpdb->insert($internetTable, $internetData);
         }
+        if ($body['status'] ='rented' ){
+        $notificationTable = $wpdb->prefix . 'alkamal_notification';
+        $notificationData = array();
+        $notificationData['propertyId'] = $propertyId;
+        $notificationData['nextNotificationDate'] = date('Y-m-d');
+        $notificationData['alertTime'] = $body['notificationAlert'];
+        if (isset($body['isCustom']) && $body['isCustom'] == 1) {
+            $nextnot = (int) $body['paymentSystem'] - (int) $body['notificationAlert'];
+            $date=date_create($body['startAt']);
+            date_add($date,date_interval_create_from_date_string("$nextnot days"));
+            $finalData =  date_format($date,"Y-m-d");
 
-        if (isset($body['notificationAlert']) && !empty($body['notificationAlert'] && isset($body['startAt']) && !empty($body['startAt'])) && isset($body['isCustom']) && !empty($body['isCustom']) && isset($body['paymentSystem']) && !empty($body['paymentSystem'])) {
-            $notificationTable = $wpdb->prefix . 'alkamal_notification';
-            $notificationData = array();
-            $notificationData['propertyId'] = $propertyId;
-            $notificationData['alertTime'] = $body['notificationAlert'];
-            $startDate = $body['startAt'];
-            if (isset($body['isCustom']) && $body['isCustom'] == 1) {
-                $nextnot = (int) $body['paymentSystem'] - (int) $body['notificationAlert'];
-                $twoDaysFromNow = strtotime("+$nextnot days", strtotime($startDate));
-            } elseif (isset($body['isCustom']) && $body['isCustom'] == 0) {
-                $days = (int) $body['paymentSystem'] / 30;
-                $nextnot = $days - (int) $body['notificationAlert'];
-                $twoDaysFromNow = strtotime("+$nextnot months", strtotime($startDate));
-            }
-            $sqlDateFormat = date('Y-m-d H:i:s', $twoDaysFromNow); // Format the timestamp as YYYY-MM-DD for SQL
-            $notificationData['nextNotificationDate'] = $sqlDateFormat;
-            $wpdb->insert($notificationTable, $notificationData);
+            // $finalData = strtotime("+$nextnot days", strtotime($startDate));
+            
+        } 
+        elseif (isset($body['isCustom']) && $body['isCustom'] == 0) {
+            $months = (int) $body['paymentSystem'] / 30;
+            // $nextnot = strtotime("+$months months", strtotime($startDate));
+            // $shiftnot = $body['notificationAlert'];
+            // $finalData = strtotime("-$shiftnot days", strtotime($nextnot));
+
+            $dayshift = $body['notificationAlert'];
+            $date=date_create($body['startAt']);
+            date_sub($date,date_interval_create_from_date_string("$dayshift days"));
+            date_add($date,date_interval_create_from_date_string("$months months"));
+            $finalData =  date_format($date,"Y-m-d");
+
         }
-        $res = new WP_REST_Response([
-            'propertyId' => $propertyId,
-            'message' => 'Property created successfully',
-        ]);
+            // $sqlDateFormat = date('Y-m-d', $finalData); // Format the timestamp as YYYY-MM-DD for SQL
+            $notificationData['nextNotificationDate'] = $finalData;
+            $wpdb->insert($notificationTable, $notificationData);
+            $res = new WP_REST_Response([
+                'propertyId' => $propertyId,
+                'message' => 'Property created successfully',
+                'error' => $wpdb->last_error,
+            ]);
+        }
+    }
+    
 
-        return $res;
-    } catch (Exception $e) {
+    //     if (isset($body['notificationAlert']) && !empty($body['notificationAlert'] && isset($body['startAt']) && !empty($body['startAt'])) && isset($body['isCustom']) && !empty($body['isCustom']) && isset($body['paymentSystem']) && !empty($body['paymentSystem'])) {
+    //         $notificationData['alertTime'] = $body['notificationAlert'];
+    //         $startDate = $body['startAt'];
+    //         if (isset($body['isCustom']) && $body['isCustom'] == 1) {
+    //             $nextnot = (int) $body['paymentSystem'] - (int) $body['notificationAlert'];
+    //             $twoDaysFromNow = strtotime("+$nextnot days", strtotime($startDate));
+    //         } elseif (isset($body['isCustom']) && $body['isCustom'] == 0) {
+    //             $days = (int) $body['paymentSystem'] / 30;
+    //             $nextnot = $days - (int) $body['notificationAlert'];
+    //             $twoDaysFromNow = strtotime("+$nextnot months", strtotime($startDate));
+    //         }
+    //         $sqlDateFormat = date('Y-m-d H:i:s', $twoDaysFromNow); // Format the timestamp as YYYY-MM-DD for SQL
+    //         $notificationData['nextNotificationDate'] = $sqlDateFormat;
+    //     }
+    //     $wpdb->insert($notificationTable, $notificationData);
+    //     $res = new WP_REST_Response([
+    //         'propertyId' => $propertyId,
+    //         'message' => 'Property created successfully',
+    //         'error' => $wpdb->last_error,
+    //     ]);
+    // }
+     catch (Exception $e) {
         wp_send_json_error($e->getMessage(), 401);
     }
 }
