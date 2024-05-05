@@ -68,7 +68,7 @@ function getAllPayments($body)
       FROM $tablePayments AS a
       INNER JOIN $tableProperties AS b ON a.propertyId = b.id AND b.isDeleted = 0
       WHERE MONTH(a.createdAt) = MONTH(NOW()) ;";
-    $collectedValue = $wpdb->get_results($wpdb->prepare($sql))[0];
+    $collectedValue = $wpdb->get_var($wpdb->prepare($sql));
     $rentValue = $report->rentValue;
     $shiftedPayment = $report->shiftedPayment;
     $depositValue = $collectedValue;
@@ -85,7 +85,7 @@ function getAllPayments($body)
         $depositValue = 0;
     }
 
-    $res->rentValue = (float) $rentValue + (float) $shiftedPayment;
+    $res->rentValue = (float) $rentValue - (float) $shiftedPayment;
     $res->collectedValue = (float) $depositValue;
 
     // if(is_numeric($rentValue) && $rentValue > 1){
